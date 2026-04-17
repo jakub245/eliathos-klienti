@@ -271,7 +271,10 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       </div>
       <div class="form-field">
         <label class="form-label">Heslo klienta</label>
-        <input class="form-input" type="text" id="mk-heslo" placeholder="Zvolte heslo">
+        <div style="position:relative;">
+          <input class="form-input" type="password" id="mk-heslo" placeholder="Zvolte heslo" style="padding-right:44px;">
+          <button type="button" onclick="toggleHeslo()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink3);font-size:13px;padding:0;" id="heslo-eye">Zobrazit</button>
+        </div>
       </div>
     </div>
     <div class="form-field">
@@ -284,6 +287,10 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
         <option value="osobni">Osobní brand</option>
         <option value="firemni">Firemní web</option>
         <option value="startup">Startup / pitch</option>
+        <option value="nezisk">Neziskovka / spolek</option>
+        <option value="event">Event / akce</option>
+        <option value="wellness">Zdraví / wellness</option>
+        <option value="remeslo">Řemeslo / výroba</option>
       </select>
     </div>
     <div class="form-field">
@@ -439,6 +446,10 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       <button class="seg-pill" data-seg="osobni" onclick="dqSeg('osobni',this)">Osobní brand</button>
       <button class="seg-pill" data-seg="firemni" onclick="dqSeg('firemni',this)">Firemní web</button>
       <button class="seg-pill" data-seg="startup" onclick="dqSeg('startup',this)">Startup</button>
+      <button class="seg-pill" data-seg="nezisk" onclick="dqSeg('nezisk',this)">Neziskovka</button>
+      <button class="seg-pill" data-seg="event" onclick="dqSeg('event',this)">Event / akce</button>
+      <button class="seg-pill" data-seg="wellness" onclick="dqSeg('wellness',this)">Zdraví / wellness</button>
+      <button class="seg-pill" data-seg="remeslo" onclick="dqSeg('remeslo',this)">Řemeslo / výroba</button>
     </div>
     <div class="progress-wrap">
       <span class="progress-counter" id="dq-prog-txt">0 / 0</span>
@@ -528,15 +539,60 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       </div>
     </div>
 
+
+    <!-- Segment Neziskovka -->
+    <div class="cl-section seg-sec" data-seg="nezisk" id="dq-nezisk">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Neziskovka / spolek</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="nz-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Typ organizace a oblast působení?</div><div class="card-desc"><span class="tag">sport</span><span class="tag">kultura</span><span class="tag">sociální</span><span class="tag">ekologie</span><span class="tag">vzdělávání</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="nz-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Potřebujete online darování / sbírku?</div><div class="card-desc">Platební brána pro dary, opakované platby, daňové potvrzení</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="nz-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Členská sekce nebo přihlašování?</div><div class="card-desc">Evidence členů, platba příspěvků, přístup k obsahu</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="nz-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kdo bude web spravovat?</div><div class="card-desc">Dobrovolník, zaměstnanec — jaká je technická zdatnost?</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment Event -->
+    <div class="cl-section seg-sec" data-seg="event" id="dq-event">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Event / akce</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="ev-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Typ eventu?</div><div class="card-desc"><span class="tag">konference</span><span class="tag">festival</span><span class="tag">firemní akce</span><span class="tag">sportovní</span><span class="tag">kulturní</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="ev-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Online registrace nebo prodej vstupenek?</div><div class="card-desc"><span class="tag">Eventbrite</span><span class="tag">vlastní formulář</span><span class="tag">žádné</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="ev-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Jednorázová nebo opakující se akce?</div><div class="card-desc">Roční ročník nebo první? Ovlivňuje architekturu webu.</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="ev-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Sponzoři a partneři?</div><div class="card-desc">Loga, úrovně sponzorství, viditelnost</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment Wellness -->
+    <div class="cl-section seg-sec" data-seg="wellness" id="dq-wellness">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Zdraví / wellness</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="wl-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Typ provozovny nebo služby?</div><div class="card-desc"><span class="tag">ordinace</span><span class="tag">fitness</span><span class="tag">masáže</span><span class="tag">coaching</span><span class="tag">výživa</span><span class="tag">spa</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="wl-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Online rezervace termínů?</div><div class="card-desc"><span class="tag">Calendly</span><span class="tag">Bookio</span><span class="tag">vlastní</span> Napojení na platbu předem?</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="wl-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kurzy nebo skupinové lekce?</div><div class="card-desc">Rozvrh, kapacita, platba online</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="wl-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Certifikace, reference, before/after?</div><div class="card-desc">Důvěryhodnost je v tomto oboru klíčová</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment Řemeslo -->
+    <div class="cl-section seg-sec" data-seg="remeslo" id="dq-remeslo">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Řemeslo / výroba</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="rm-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Co vyrábějí nebo jaké řemeslo?</div><div class="card-desc">Truhlář, kuchyně na míru, kováři, keramika, šití…</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="rm-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Portfolio realizací — rozsah a formát?</div><div class="card-desc">Fotogalerie, case studies, videa z výroby</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="rm-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Poptávkový formulář nebo konfigurátor?</div><div class="card-desc">Zakázky na míru vyžadují poptávku, ne přímý nákup</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="rm-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Orientační ceník nebo cena na dotaz?</div><div class="card-desc">Zákazník chce vědět aspoň řád — jak to komunikovat</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
     <div class="global-notes">
       <div class="global-notes-hdr">Volné poznámky</div>
       <textarea placeholder="Cokoliv dalšího co chcete sdělit…" id="dq-poznamky"></textarea>
     </div>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn btn-gold" onclick="dqSaveManual()">
+      <button class="btn btn-gold" onclick="dqSaveAndClose()">
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12V5l5-3 5 3v7H9V9H5v3H2z"/></svg>
-        Uložit dotazník
+        Uložit a zavřít
       </button>
     </div>
   </div>
@@ -1113,6 +1169,24 @@ async function deleteKlient() {
 
 
 // copyInvite handled via event listener
+
+
+function toggleHeslo() {
+  const input = document.getElementById('mk-heslo');
+  const btn = document.getElementById('heslo-eye');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'Skrýt';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'Zobrazit';
+  }
+}
+
+async function dqSaveAndClose() {
+  await dqDoSave(true);
+  showPortal();
+}
 
 // ─── INIT ───
 const slug = getSlug();
