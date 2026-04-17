@@ -732,7 +732,9 @@ function doLogout() {
 // ─── ADMIN DASHBOARD ───
 async function loadAdminDashboard() {
   setBadge(['portal-badge','dq-badge','kk-badge','sf-badge'], 'Admin', 'admin');
-  const { data } = await sb.from('klienti').select('*, schuzky(checklist, kalkulace)').order('created_at', { ascending: false });
+  const { data, error: ke } = await sb.from('klienti').select('*').eq('aktivni', true).order('created_at', { ascending: false });
+  if (ke) { console.error(ke); toast('Chyba načítání klientů', 'error'); showView('admin'); return; }
+  const { data: vsechnySchuzky } = await sb.from('schuzky').select('klient_id, checklist, kalkulace');
   const grid = document.getElementById('admin-grid');
   grid.innerHTML = '';
 
@@ -742,7 +744,7 @@ async function loadAdminDashboard() {
   }
 
   data.forEach(k => {
-    const s = k.schuzky?.[0];
+    const s = vsechnySchuzky?.find(sc => sc.klient_id === k.id);
     const cl = s?.checklist || {};
     const kal = s?.kalkulace || {};
     const soubory = k.soubory || [];
