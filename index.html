@@ -1100,37 +1100,30 @@ async function deleteKlient() {
 function copyInvite(e, btn, text) {
   e.stopPropagation();
   e.preventDefault();
-  try {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(() => {
-        btn.textContent = 'Zkopírováno!';
-        btn.classList.add('copied');
-        toast('Pozvánka zkopírována do schránky', 'success');
-        setTimeout(() => { btn.textContent = 'Kopírovat pozvánku'; btn.classList.remove('copied'); }, 2500);
-      }).catch(() => fallbackCopy(text, btn));
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Zkopírováno!';
+    btn.classList.add('copied');
+    toast('Pozvánka zkopírována', 'success');
+    setTimeout(() => { btn.textContent = 'Kopírovat pozvánku'; btn.classList.remove('copied'); }, 2500);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:absolute;left:-9999px;';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (ok) {
+      btn.textContent = 'Zkopírováno!';
+      btn.classList.add('copied');
+      toast('Pozvánka zkopírována', 'success');
+      setTimeout(() => { btn.textContent = 'Kopírovat pozvánku'; btn.classList.remove('copied'); }, 2500);
     } else {
-      fallbackCopy(text, btn);
+      toast('Nepodařilo se zkopírovat — zkus znovu', 'error');
     }
-  } catch(err) {
-    fallbackCopy(text, btn);
-  }
-}
-
-function fallbackCopy(text, btn) {
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try {
-    document.execCommand('copy');
-    if (btn) { btn.textContent = 'Zkopírováno!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Kopírovat pozvánku'; btn.classList.remove('copied'); }, 2500); }
-    toast('Pozvánka zkopírována do schránky', 'success');
-  } catch(e) {
-    toast('Zkopírování se nezdařilo — zkopíruj ručně', 'error');
-  }
-  document.body.removeChild(ta);
+  });
 }
 
 // ─── INIT ───
