@@ -154,6 +154,60 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .toast.show { opacity: 1; transform: translateY(0); }
 .toast.success { border-color: rgba(125,200,50,0.4); color: var(--accent); }
 .toast.error { border-color: rgba(224,82,82,0.4); color: var(--danger); }
+
+/* ─── KALKULACE ─── */
+.kalk-wrap { max-width: 820px; margin: 0 auto; padding: 0 28px 80px; }
+.kalk-header { padding: 40px 0 28px; border-bottom: 1px solid var(--border-strong); margin-bottom: 28px; }
+.kalk-header h1 { font-size: clamp(26px, 4vw, 38px); font-weight: 300; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 6px; }
+.kalk-header h1 strong { font-weight: 500; }
+.kalk-header-sub { font-size: 14px; color: var(--ink2); }
+.kalk-cat { margin-bottom: 32px; }
+.kalk-cat-label { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.kalk-cat-title { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--ink); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.kalk-cat-line { flex: 1; height: 1px; background: var(--border); }
+.kalk-items { display: flex; flex-direction: column; gap: 5px; }
+.kalk-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; cursor: pointer; transition: all 0.15s; display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center; }
+.kalk-item:hover { border-color: var(--border-strong); background: var(--surface2); }
+.kalk-item.selected { border-color: rgba(125,200,50,0.25); background: rgba(125,200,50,0.03); }
+.kalk-item .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--ink3); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.kalk-item.selected .checkbox { background: var(--accent); border-color: var(--accent); }
+.kalk-item.selected .checkbox svg { display: block; }
+.kalk-item .checkbox svg { display: none; }
+.kalk-item-name { font-size: 14px; font-weight: 500; color: var(--ink); transition: color 0.15s; }
+.kalk-item.selected .kalk-item-name { color: var(--accent); }
+.kalk-item-desc { font-size: 12px; color: var(--ink2); margin-top: 2px; }
+.kalk-item-price { font-family: var(--mono); font-size: 12px; color: var(--ink2); text-align: right; white-space: nowrap; }
+.kalk-item.selected .kalk-item-price { color: var(--accent); }
+.kalk-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+.kalk-summary-rows { padding: 0 20px; }
+.kalk-summary-row { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 13px; gap: 12px; }
+.kalk-summary-row:last-child { border-bottom: none; }
+.kalk-summary-name { color: var(--ink); }
+.kalk-summary-val { font-family: var(--mono); font-size: 12px; color: var(--ink2); }
+.kalk-total { background: var(--ink); border-radius: 10px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+.kalk-total-left {}
+.kalk-total-label { font-size: 13px; color: rgba(238,238,232,0.6); margin-bottom: 4px; }
+.kalk-total-val { font-size: 28px; font-weight: 600; color: var(--accent); font-family: 'Syne', sans-serif; line-height: 1; }
+.kalk-total-hours { font-family: var(--mono); font-size: 12px; color: rgba(238,238,232,0.5); margin-top: 6px; }
+.kalk-empty { text-align: center; padding: 32px; font-size: 14px; color: var(--ink3); }
+
+/* ─── PORTALY ADMIN ─── */
+.portal-admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin-bottom: 28px; }
+.portal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: all 0.15s; }
+.portal-card:hover { border-color: var(--border-strong); }
+.portal-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; gap: 8px; }
+.portal-card-name { font-size: 15px; font-weight: 500; color: var(--ink); }
+.portal-card-slug { font-family: var(--mono); font-size: 10px; color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(125,200,50,0.2); border-radius: 4px; padding: 2px 7px; }
+.portal-card-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; margin-bottom: 12px; }
+.portal-card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.portal-card-link { font-family: var(--mono); font-size: 10px; color: var(--ink3); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.portal-card-link:hover { color: var(--ink); border-color: var(--border-strong); }
+.portal-card-link.gold { color: var(--gold); border-color: rgba(181,160,98,0.25); background: rgba(181,160,98,0.08); }
+.form-soubory { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.soubor-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; align-items: center; }
+.soubor-del { background: none; border: none; color: var(--ink3); cursor: pointer; font-size: 16px; padding: 4px; }
+.soubor-del:hover { color: var(--danger); }
+
 </style>
 </head>
 <body>
@@ -205,10 +259,16 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       <div class="eyebrow">ELIATHOS · CHECKLIST</div>
       <h1>Moji <strong>klienti</strong></h1>
     </div>
-    <button class="btn btn-primary" onclick="openModal()">
-      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2v10M2 7h10"/></svg>
-      Nová schůzka
-    </button>
+    <div style="display:flex;gap:8px;">
+      <button class="btn" onclick="showView('portaly')">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 1"/></svg>
+        Klientské portály
+      </button>
+      <button class="btn btn-primary" onclick="openModal()">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2v10M2 7h10"/></svg>
+        Nová schůzka
+      </button>
+    </div>
   </div>
 
   <div class="stats-row">
@@ -234,6 +294,62 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 </div>
 
 <!-- ═══════════ CHECKLIST ═══════════ -->
+
+<!-- ═══════════ PORTÁLY ═══════════ -->
+<div class="view" id="view-portaly">
+<div class="dash">
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <div class="eyebrow">ELIATHOS · ADMIN</div>
+      <h1>Klientské <strong>portály</strong></h1>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn" onclick="showView('dashboard')">← Dashboard</button>
+      <button class="btn btn-primary" onclick="openPortalModal()">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2v10M2 7h10"/></svg>
+        Nový portál
+      </button>
+    </div>
+  </div>
+  <div class="portal-admin-grid" id="portaly-grid"></div>
+</div>
+</div>
+
+<!-- MODAL: Nový / edit portál -->
+<div class="modal-overlay" id="modal-portal">
+  <div class="modal" style="max-width:520px;">
+    <h2 id="modal-portal-title">Nový klientský portál</h2>
+    <input type="hidden" id="portal-edit-id">
+    <div class="form-field">
+      <label class="form-label">Název klienta</label>
+      <input class="form-input" type="text" id="portal-jmeno" placeholder="Např. RK Novotný s.r.o.">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Popis (volitelný)</label>
+      <input class="form-input" type="text" id="portal-popis" placeholder="Krátký popis projektu nebo spolupráce">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-field">
+        <label class="form-label">Slug (část URL)</label>
+        <input class="form-input" type="text" id="portal-slug" placeholder="novotny-rk" oninput="slugify(this)">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Heslo klienta</label>
+        <input class="form-input" type="text" id="portal-heslo" placeholder="Zvolte heslo">
+      </div>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Soubory projektu</label>
+      <div class="form-soubory" id="portal-soubory-list"></div>
+      <button type="button" class="btn" style="margin-top:8px;font-size:12px;" onclick="addSouborRow()">+ Přidat soubor</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closePortalModal()">Zrušit</button>
+      <button class="btn btn-primary" onclick="savePortal()">Uložit portál</button>
+    </div>
+  </div>
+</div>
+
 <div class="view" id="view-checklist">
 <div class="checklist-wrap">
 
@@ -445,9 +561,181 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 7l4 4 6-6"/></svg>
       Označit jako dokončené
     </button>
+    <button class="btn" onclick="goToKalkulace()">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2h10v10H2zM5 5h4M5 7h4M5 9h2"/></svg>
+      Předběžná kalkulace
+    </button>
     <button class="btn" onclick="exportMd()">
       <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="8" height="10" rx="1"/><path d="M5 2V1h7v10h-1"/></svg>
       Kopírovat MD do Notionu
+    </button>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════ KALKULACE ═══════════ -->
+<div class="view" id="view-kalkulace">
+<div class="kalk-wrap">
+
+  <div class="kalk-header">
+    <div class="cl-nav">
+      <button class="btn btn-ghost btn-sm" onclick="backToChecklist()">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 2L3 7l6 5"/></svg>
+        Zpět na checklist
+      </button>
+      <div class="breadcrumb" style="margin-left:8px;"><span id="kalk-breadcrumb">—</span> · Kalkulace</div>
+      <div style="margin-left:auto;">
+        <div class="save-indicator"><div class="save-dot" id="kalk-save-dot"></div><span id="kalk-save-text">—</span></div>
+      </div>
+    </div>
+    <h1 style="margin-top:16px;">Předběžná <strong>kalkulace</strong></h1>
+    <p class="kalk-header-sub">Zaškrtni co klient chce — cena se počítá automaticky a ukládá do databáze.</p>
+  </div>
+
+  <!-- Vizuální identita -->
+  <div class="kalk-cat">
+    <div class="kalk-cat-label"><span class="kalk-cat-title">Vizuální identita</span><div class="kalk-cat-line"></div></div>
+    <div class="kalk-items">
+      <div class="kalk-item" data-id="k-logo" data-hmin="8" data-hmax="20" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Logo</div><div class="kalk-item-desc">Primární značka, varianty, formáty</div></div>
+        <div class="kalk-item-price">8–20 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-brand" data-hmin="16" data-hmax="28" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Brand manuál</div><div class="kalk-item-desc">Barvy, písma, pravidla použití</div></div>
+        <div class="kalk-item-price">16–28 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-vizitky" data-hmin="4" data-hmax="8" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Vizitky</div><div class="kalk-item-desc">Návrh + podklady pro tisk</div></div>
+        <div class="kalk-item-price">4–8 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-tiskoviny" data-hmin="6" data-hmax="12" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Firemní tiskoviny</div><div class="kalk-item-desc">Hlavičkový papír, obálky, šablony</div></div>
+        <div class="kalk-item-price">6–12 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-podpis" data-hmin="2" data-hmax="4" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Emailový podpis</div><div class="kalk-item-desc">HTML podpis do emailového klienta</div></div>
+        <div class="kalk-item-price">2–4 hod</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Web a digitál -->
+  <div class="kalk-cat">
+    <div class="kalk-cat-label"><span class="kalk-cat-title">Web a digitál</span><div class="kalk-cat-line"></div></div>
+    <div class="kalk-items">
+      <div class="kalk-item" data-id="k-webdesign" data-hmin="20" data-hmax="40" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Webdesign (UI/UX návrh)</div><div class="kalk-item-desc">Návrh bez kódování, Figma/prototyp</div></div>
+        <div class="kalk-item-price">20–40 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-webvyvoj" data-hmin="20" data-hmax="40" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Web vývoj (jednoduchý)</div><div class="kalk-item-desc">Statický web, landing, microsite</div></div>
+        <div class="kalk-item-price">20–40 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-landing" data-hmin="8" data-hmax="16" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Landing page</div><div class="kalk-item-desc">Cílená stránka s jasnou výzvou</div></div>
+        <div class="kalk-item-price">8–16 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-qara" data-hmin="20" data-hmax="40" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Napojení QARA / XML feed</div><div class="kalk-item-desc">Integrace realitního systému, závisí na API</div></div>
+        <div class="kalk-item-price">20–40 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-hypo" data-hmin="8" data-hmax="16" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Hypoteční kalkulačka</div><div class="kalk-item-desc">Interaktivní kalkulátor splátky</div></div>
+        <div class="kalk-item-price">8–16 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-social" data-hmin="6" data-hmax="14" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Social media šablony</div><div class="kalk-item-desc">Canva / Figma šablony pro Instagram, Facebook</div></div>
+        <div class="kalk-item-price">6–14 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-pitch" data-hmin="6" data-hmax="12" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Pitch deck / prezentace</div><div class="kalk-item-desc">Profesionální slide deck</div></div>
+        <div class="kalk-item-price">6–12 hod</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marketing -->
+  <div class="kalk-cat">
+    <div class="kalk-cat-label"><span class="kalk-cat-title">Marketing a obsah</span><div class="kalk-cat-line"></div></div>
+    <div class="kalk-items">
+      <div class="kalk-item" data-id="k-strategie" data-hmin="8" data-hmax="16" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Marketingová strategie</div><div class="kalk-item-desc">Analýza, cíle, kanály, plán</div></div>
+        <div class="kalk-item-price">8–16 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-copy" data-hmin="4" data-hmax="10" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Copywriting</div><div class="kalk-item-desc">Texty webu, reklam, emailů</div></div>
+        <div class="kalk-item-price">4–10 hod / projekt</div>
+      </div>
+      <div class="kalk-item" data-id="k-obsahplan" data-hmin="4" data-hmax="8" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Obsahový plán</div><div class="kalk-item-desc">Redakční kalendář, témata, formáty</div></div>
+        <div class="kalk-item-price">4–8 hod / měsíc</div>
+      </div>
+      <div class="kalk-item" data-id="k-ads" data-hmin="6" data-hmax="12" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Správa reklam (Meta / Google)</div><div class="kalk-item-desc">Nastavení a správa kampaní</div></div>
+        <div class="kalk-item-price">6–12 hod / měsíc</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tisk -->
+  <div class="kalk-cat">
+    <div class="kalk-cat-label"><span class="kalk-cat-title">Tisk a produkce</span><div class="kalk-cat-line"></div></div>
+    <div class="kalk-items">
+      <div class="kalk-item" data-id="k-brozura" data-hmin="8" data-hmax="16" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Brožura / katalog</div><div class="kalk-item-desc">Návrh + podklady pro tisk</div></div>
+        <div class="kalk-item-price">8–16 hod</div>
+      </div>
+      <div class="kalk-item" data-id="k-brozura-proj" data-hmin="4" data-hmax="10" onclick="toggleKalk(this)">
+        <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="kalk-item-name">Projektová brožura</div><div class="kalk-item-desc">Brožura ke konkrétnímu projektu / nemovitosti</div></div>
+        <div class="kalk-item-price">4–10 hod / ks</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Souhrn -->
+  <div id="kalk-summary-wrap" style="display:none;">
+    <div class="kalk-summary">
+      <div class="kalk-summary-rows" id="kalk-summary-rows"></div>
+    </div>
+    <div class="kalk-total">
+      <div class="kalk-total-left">
+        <div class="kalk-total-label">Orientační cena projektu</div>
+        <div class="kalk-total-val" id="kalk-total-val">—</div>
+        <div class="kalk-total-hours" id="kalk-total-hours">— hod celkem · sazba 1 200–2 000 Kč/hod</div>
+      </div>
+    </div>
+    <p class="kalk-note">Bez DPH · nezahrnuje tisk, nákup médií, domény a hosting · finální cena po upřesnění rozsahu na schůzce</p>
+  </div>
+
+  <div id="kalk-empty" class="kalk-empty">Zatím nic nevybráno — zaškrtni položky výše</div>
+
+  <div class="cl-actions" style="margin-top:24px;">
+    <button class="btn btn-primary" onclick="saveKalkulace()">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12V5l5-3 5 3v7H9V9H5v3H2z"/></svg>
+      Uložit kalkulaci
+    </button>
+    <button class="btn" onclick="exportKalkMd()">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="8" height="10" rx="1"/><path d="M5 2V1h7v10h-1"/></svg>
+      Kopírovat do Notionu
     </button>
   </div>
 
@@ -470,6 +758,8 @@ let currentSeg = 'general';
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'portaly') loadPortaly();
 }
 
 // ─── TOAST ───
@@ -605,6 +895,7 @@ async function openSchuzka(id) {
 function backToDash() {
   currentSchuzkaId = null;
   loadDashboard();
+if (document.getElementById("portaly-grid")) loadPortaly();
   showView('dashboard');
 }
 
@@ -728,6 +1019,221 @@ function exportMd() {
   if (poznamky) out += `## Poznámky ze schůzky\n\n${poznamky}\n`;
 
   navigator.clipboard.writeText(out).then(() => toast('Zkopírováno do schránky!', 'success'));
+}
+
+
+// ─── KALKULACE ───
+const KALK_RATE_MIN = 1200;
+const KALK_RATE_MAX = 2000;
+let kalkSaveTimer = null;
+
+function goToKalkulace() {
+  if (!currentSchuzkaId) return;
+  document.getElementById('kalk-breadcrumb').textContent = document.getElementById('cl-title').textContent;
+  loadKalkulaceFromDb();
+  showView('kalkulace');
+  window.scrollTo(0, 0);
+}
+
+function backToChecklist() {
+  showView('checklist');
+  window.scrollTo(0, 0);
+}
+
+async function loadKalkulaceFromDb() {
+  const { data, error } = await sb.from('schuzky').select('kalkulace').eq('id', currentSchuzkaId).single();
+  if (error || !data?.kalkulace) return;
+  const kal = data.kalkulace;
+  document.querySelectorAll('.kalk-item').forEach(item => {
+    item.classList.toggle('selected', !!kal[item.dataset.id]);
+  });
+  updateKalkSummary();
+}
+
+function toggleKalk(item) {
+  item.classList.toggle('selected');
+  updateKalkSummary();
+  scheduleKalkSave();
+}
+
+function updateKalkSummary() {
+  const selected = [...document.querySelectorAll('.kalk-item.selected')];
+  const wrap = document.getElementById('kalk-summary-wrap');
+  const empty = document.getElementById('kalk-empty');
+
+  if (selected.length === 0) {
+    wrap.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  wrap.style.display = 'block';
+  empty.style.display = 'none';
+
+  let totalHMin = 0, totalHMax = 0;
+  let rows = '';
+  selected.forEach(item => {
+    const name = item.querySelector('.kalk-item-name').textContent;
+    const hmin = parseInt(item.dataset.hmin);
+    const hmax = parseInt(item.dataset.hmax);
+    totalHMin += hmin; totalHMax += hmax;
+    const pmin = (hmin * KALK_RATE_MIN).toLocaleString('cs-CZ');
+    const pmax = (hmax * KALK_RATE_MAX).toLocaleString('cs-CZ');
+    rows += `<div class="kalk-summary-row"><span class="kalk-summary-name">${name}</span><span class="kalk-summary-val">${hmin}–${hmax} hod · ${pmin}–${pmax} Kč</span></div>`;
+  });
+
+  document.getElementById('kalk-summary-rows').innerHTML = rows;
+  const totalMin = (totalHMin * KALK_RATE_MIN).toLocaleString('cs-CZ');
+  const totalMax = (totalHMax * KALK_RATE_MAX).toLocaleString('cs-CZ');
+  document.getElementById('kalk-total-val').textContent = `${totalMin} – ${totalMax} Kč`;
+  document.getElementById('kalk-total-hours').textContent = `${totalHMin}–${totalHMax} hod celkem · sazba 1 200–2 000 Kč/hod`;
+}
+
+function scheduleKalkSave() {
+  const dot = document.getElementById('kalk-save-dot');
+  const txt = document.getElementById('kalk-save-text');
+  dot.className = 'save-dot saving'; txt.textContent = 'Ukládám…';
+  clearTimeout(kalkSaveTimer);
+  kalkSaveTimer = setTimeout(saveKalkulace, 900);
+}
+
+async function saveKalkulace() {
+  if (!currentSchuzkaId) return;
+  const kalkulace = {};
+  document.querySelectorAll('.kalk-item').forEach(item => {
+    kalkulace[item.dataset.id] = item.classList.contains('selected');
+  });
+  const { error } = await sb.from('schuzky').update({ kalkulace }).eq('id', currentSchuzkaId);
+  const dot = document.getElementById('kalk-save-dot');
+  const txt = document.getElementById('kalk-save-text');
+  if (error) { dot.className = 'save-dot'; txt.textContent = 'Chyba'; }
+  else { dot.className = 'save-dot saved'; txt.textContent = 'Uloženo'; }
+}
+
+function exportKalkMd() {
+  const selected = [...document.querySelectorAll('.kalk-item.selected')];
+  if (selected.length === 0) { toast('Nic není vybráno', 'error'); return; }
+  const klient = document.getElementById('cl-title').textContent;
+  const datum = document.getElementById('cl-datum').textContent;
+  let totalHMin = 0, totalHMax = 0;
+  let out = `# Kalkulace — ${klient}\n\n`;
+  out += `| | |\n|---|---|\n| **Klient** | ${klient} |\n| **Datum** | ${datum} |\n\n---\n\n`;
+  out += `## Vybrané položky\n\n| Položka | Odhad hodin | Min cena | Max cena |\n|---|---|---|---|\n`;
+  selected.forEach(item => {
+    const name = item.querySelector('.kalk-item-name').textContent;
+    const hmin = parseInt(item.dataset.hmin);
+    const hmax = parseInt(item.dataset.hmax);
+    totalHMin += hmin; totalHMax += hmax;
+    out += `| ${name} | ${hmin}–${hmax} hod | ${(hmin*KALK_RATE_MIN).toLocaleString('cs-CZ')} Kč | ${(hmax*KALK_RATE_MAX).toLocaleString('cs-CZ')} Kč |\n`;
+  });
+  out += `\n**Celkem: ${totalHMin}–${totalHMax} hod · ${(totalHMin*KALK_RATE_MIN).toLocaleString('cs-CZ')} – ${(totalHMax*KALK_RATE_MAX).toLocaleString('cs-CZ')} Kč** (bez DPH)\n`;
+  out += `\n_Sazba 1 200–2 000 Kč/hod · nezahrnuje tisk, média, hosting_\n`;
+  navigator.clipboard.writeText(out).then(() => toast('Zkopírováno do schránky!', 'success'));
+}
+
+
+// ─── PORTÁLY ADMIN ───
+function openPortalModal(klientData) {
+  document.getElementById('modal-portal-title').textContent = klientData ? 'Upravit portál' : 'Nový klientský portál';
+  document.getElementById('portal-edit-id').value = klientData?.id || '';
+  document.getElementById('portal-jmeno').value = klientData?.jmeno || '';
+  document.getElementById('portal-popis').value = klientData?.popis || '';
+  document.getElementById('portal-slug').value = klientData?.slug || '';
+  document.getElementById('portal-heslo').value = klientData?.heslo || '';
+  const list = document.getElementById('portal-soubory-list');
+  list.innerHTML = '';
+  const soubory = klientData?.soubory || [];
+  soubory.forEach(s => addSouborRow(s.nazev, s.url, s.typ));
+  document.getElementById('modal-portal').classList.add('open');
+  setTimeout(() => document.getElementById('portal-jmeno').focus(), 100);
+}
+
+function closePortalModal() {
+  document.getElementById('modal-portal').classList.remove('open');
+}
+document.getElementById('modal-portal').addEventListener('click', e => { if(e.target === e.currentTarget) closePortalModal(); });
+
+function slugify(input) {
+  input.value = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+}
+
+function addSouborRow(nazev='', url='', typ='') {
+  const list = document.getElementById('portal-soubory-list');
+  const row = document.createElement('div');
+  row.className = 'soubor-row';
+  row.innerHTML = `<input class="form-input" type="text" placeholder="Název souboru" value="${nazev}" style="font-size:13px;">
+    <input class="form-input" type="text" placeholder="Google Drive URL" value="${url}" style="font-size:13px;">
+    <button type="button" class="soubor-del" onclick="this.parentElement.remove()">×</button>`;
+  list.appendChild(row);
+}
+
+async function savePortal() {
+  const jmeno = document.getElementById('portal-jmeno').value.trim();
+  const popis = document.getElementById('portal-popis').value.trim();
+  const slug = document.getElementById('portal-slug').value.trim();
+  const heslo = document.getElementById('portal-heslo').value.trim();
+  const editId = document.getElementById('portal-edit-id').value;
+
+  if (!jmeno) { toast('Zadej jméno klienta', 'error'); return; }
+  if (!slug) { toast('Zadej slug (část URL)', 'error'); return; }
+  if (!heslo) { toast('Zadej heslo', 'error'); return; }
+
+  const rows = document.querySelectorAll('#portal-soubory-list .soubor-row');
+  const soubory = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const nazev = inputs[0].value.trim();
+    const url = inputs[1].value.trim();
+    if (nazev && url) soubory.push({ nazev, url, typ: 'Dokument' });
+  });
+
+  const payload = { jmeno, popis, slug, heslo, soubory };
+
+  let error;
+  if (editId) {
+    ({ error } = await sb.from('klienti').update(payload).eq('id', editId));
+  } else {
+    ({ error } = await sb.from('klienti').insert({ ...payload, segment: 'general' }));
+  }
+
+  if (error) { toast('Chyba: ' + error.message, 'error'); return; }
+  closePortalModal();
+  toast(editId ? 'Portál aktualizován' : 'Portál vytvořen', 'success');
+  loadPortaly();
+}
+
+async function loadPortaly() {
+  const { data, error } = await sb.from('klienti').select('*').order('created_at', { ascending: false });
+  const grid = document.getElementById('portaly-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;font-size:14px;color:var(--ink3);">Zatím žádné portály. Vytvořte první klientský portál.</div>';
+    return;
+  }
+
+  const baseUrl = window.location.origin + window.location.pathname.replace('index.html','').replace(/\/$/, '') + '/klient.html';
+
+  data.forEach(k => {
+    const soubory = k.soubory || [];
+    const portalUrl = k.slug ? baseUrl + '?k=' + k.slug : baseUrl;
+    grid.innerHTML += `<div class="portal-card">
+      <div class="portal-card-header">
+        <div class="portal-card-name">${k.jmeno}</div>
+        ${k.slug ? '<span class="portal-card-slug">/' + k.slug + '</span>' : ''}
+      </div>
+      ${k.popis ? '<div class="portal-card-desc">' + k.popis + '</div>' : ''}
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink3);margin-bottom:10px;">
+        Heslo: <span style="color:var(--ink2);">${k.heslo || '—'}</span>
+        &nbsp;·&nbsp; ${soubory.length} souborů
+      </div>
+      <div class="portal-card-actions">
+        <button class="portal-card-link gold" onclick="navigator.clipboard.writeText('${portalUrl}').then(()=>toast('Odkaz zkopírován','success'))">Kopírovat odkaz</button>
+        <button class="portal-card-link" onclick='openPortalModal(${JSON.stringify(k).replace(/'/g, "&#39;")})'>Upravit</button>
+        <a class="portal-card-link" href="${portalUrl}" target="_blank">Otevřít →</a>
+      </div>
+    </div>`;
+  });
 }
 
 // ─── INIT ───
