@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eliathos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #141412;
+  --surface: #1C1C1A;
+  --surface2: #222220;
+  --surface3: #2A2A27;
+  --ink: #EEEEE8;
+  --ink2: #A8A89E;
+  --ink3: #6E6E66;
+  --gold: #B5A062;
+  --gold-dim: rgba(181,160,98,0.12);
+  --gold-border: rgba(181,160,98,0.28);
+  --accent: #7DC832;
+  --accent-dim: rgba(125,200,50,0.12);
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.12);
+  --danger: #E05252;
+  --mono: 'DM Mono', monospace;
+}
+html { font-size: 15px; }
+body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+/* VIEWS */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ─── LOGIN ─── */
+.login-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+.login-brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 48px; }
+.login-brand-name { font-size: 14px; font-weight: 700; letter-spacing: 0.24em; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.login-brand-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.login-brand-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--ink3); }
+.login-card { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 18px; padding: 40px 36px; width: 100%; max-width: 460px; }
+.login-card h2 { font-size: 24px; font-weight: 500; margin-bottom: 8px; line-height: 1.2; }
+.login-card p { font-size: 14px; color: var(--ink2); margin-bottom: 28px; line-height: 1.6; }
+.form-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
+.form-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.1em; text-transform: uppercase; }
+.form-input { background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 8px; padding: 13px 16px; font-family: 'Syne', sans-serif; font-size: 14px; color: var(--ink); outline: none; transition: border-color 0.15s; width: 100%; }
+.form-input:focus { border-color: var(--gold); }
+.form-input::placeholder { color: var(--ink3); }
+.form-select { background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 8px; padding: 13px 16px; font-family: 'Syne', sans-serif; font-size: 14px; color: var(--ink); outline: none; width: 100%; cursor: pointer; }
+.btn-login { width: 100%; padding: 14px; background: var(--gold); color: #111; border: none; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; margin-top: 8px; letter-spacing: 0.03em; }
+.btn-login:hover { opacity: 0.88; }
+.login-error { font-size: 13px; color: var(--danger); margin-top: 12px; text-align: center; display: none; }
+
+/* ─── SHARED NAV ─── */
+.top-nav { display: flex; align-items: center; justify-content: space-between; padding: 28px 40px; border-bottom: 1px solid var(--border); }
+.nav-brand { font-size: 12px; font-weight: 700; letter-spacing: 0.22em; color: var(--ink); display: flex; align-items: center; gap: 9px; }
+.nav-brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-badge { font-family: var(--mono); font-size: 10px; padding: 4px 10px; border-radius: 100px; letter-spacing: 0.06em; }
+.nav-badge.admin { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+.nav-badge.klient { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(125,200,50,0.25); }
+.nav-logout { font-family: var(--mono); font-size: 11px; color: var(--ink3); background: none; border: none; cursor: pointer; transition: color 0.15s; padding: 0; }
+.nav-logout:hover { color: var(--ink2); }
+
+/* ─── PAGE WRAP ─── */
+.page { max-width: 900px; margin: 0 auto; padding: 0 32px 80px; }
+
+/* ─── PAGE HEADER ─── */
+.page-header { padding: 40px 0 28px; border-bottom: 1px solid var(--border); margin-bottom: 32px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.page-header h1 { font-size: clamp(26px, 4vw, 38px); font-weight: 300; letter-spacing: -0.02em; line-height: 1.1; }
+.page-header h1 strong { font-weight: 600; }
+.page-eyebrow { font-family: var(--mono); font-size: 10px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+
+/* ─── BUTTONS ─── */
+.btn { padding: 10px 20px; border-radius: 7px; font-size: 13px; font-weight: 500; font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border-strong); background: var(--surface2); color: var(--ink2); }
+.btn:hover { color: var(--ink); border-color: rgba(255,255,255,0.2); }
+.btn-gold { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 600; }
+.btn-gold:hover { opacity: 0.88; color: #111; }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--ink2); }
+.btn-ghost:hover { background: var(--surface2); color: var(--ink); border-color: transparent; }
+.btn-danger { background: rgba(224,82,82,0.1); border-color: rgba(224,82,82,0.25); color: var(--danger); }
+.btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ─── SECTION LABEL ─── */
+.sec-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ─── KLIENT CARDS (admin dashboard) ─── */
+.klient-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 32px; }
+.klient-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.15s; }
+.klient-card:hover { border-color: var(--gold-border); background: var(--surface2); }
+.klient-card-name { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.klient-card-desc { font-size: 12px; color: var(--ink2); margin-bottom: 14px; line-height: 1.5; }
+.klient-card-icons { display: flex; gap: 8px; }
+.status-icon { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--surface3); transition: all 0.15s; }
+.status-icon svg { width: 15px; height: 15px; }
+.status-icon.filled { background: var(--gold-dim); border-color: var(--gold-border); }
+.status-icon.filled svg { stroke: var(--gold); }
+.status-icon.empty svg { stroke: var(--ink3); }
+.status-icon.green-filled { background: var(--accent-dim); border-color: rgba(125,200,50,0.25); }
+.status-icon.green-filled svg { stroke: var(--accent); }
+.empty-state { text-align: center; padding: 48px 24px; color: var(--ink3); font-size: 14px; line-height: 1.7; grid-column: 1/-1; }
+.empty-state strong { display: block; font-size: 16px; color: var(--ink2); margin-bottom: 8px; font-weight: 500; }
+
+/* ─── PORTAL DASHBOARD (3 dlaždice) ─── */
+.portal-client-header { margin-bottom: 32px; }
+.portal-client-name { font-size: clamp(22px, 3.5vw, 34px); font-weight: 300; letter-spacing: -0.01em; margin-bottom: 6px; }
+.portal-client-desc { font-size: 14px; color: var(--ink2); line-height: 1.6; }
+.portal-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 36px; }
+.ptile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 20px; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; gap: 10px; }
+.ptile:hover { border-color: var(--border-strong); background: var(--surface2); }
+.ptile.gold-tile { border-color: var(--gold-border); }
+.ptile.gold-tile:hover { background: var(--gold-dim); }
+.ptile.green-tile { border-color: rgba(125,200,50,0.2); }
+.ptile.green-tile:hover { background: var(--accent-dim); }
+.ptile-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.ptile-icon.gold-bg { background: var(--gold-dim); }
+.ptile-icon.green-bg { background: var(--accent-dim); }
+.ptile-icon.gray-bg { background: var(--surface3); }
+.ptile-icon svg { width: 18px; height: 18px; }
+.ptile-name { font-size: 15px; font-weight: 500; color: var(--ink); }
+.ptile-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+.ptile-status { font-family: var(--mono); font-size: 10px; margin-top: auto; padding-top: 4px; }
+.ptile-status.done { color: var(--accent); }
+.ptile-status.partial { color: var(--gold); }
+.ptile-status.empty { color: var(--ink3); }
+
+/* ─── BACK NAV ─── */
+.back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+.back-btn { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; color: var(--ink3); background: none; border: none; cursor: pointer; padding: 0; transition: color 0.15s; }
+.back-btn:hover { color: var(--ink2); }
+.breadcrumb-sep { font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+.breadcrumb-current { font-family: var(--mono); font-size: 11px; color: var(--gold); }
+
+/* ─── SAVE INDICATOR ─── */
+.save-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.save-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink3); flex-shrink: 0; }
+.save-dot.saving { background: #EAB308; animation: pulse 0.8s infinite; }
+.save-dot.saved { background: var(--accent); }
+.save-txt { font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+/* ─── CHECKLIST ─── */
+.seg-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.seg-pill { padding: 7px 14px; border: 1px solid var(--border-strong); border-radius: 100px; font-size: 12px; cursor: pointer; background: var(--surface); color: var(--ink2); transition: all 0.15s; font-family: 'Syne', sans-serif; white-space: nowrap; }
+.seg-pill:hover { color: var(--ink); }
+.seg-pill.active { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 600; }
+.progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.progress-counter { font-family: var(--mono); font-size: 12px; color: var(--ink2); white-space: nowrap; }
+.progress-track { flex: 1; height: 1px; background: var(--border-strong); position: relative; }
+.progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--gold); transition: width 0.4s; width: 0%; }
+.cl-section { margin-bottom: 28px; }
+.cl-section.seg-sec { display: none; }
+.cl-section.seg-sec.visible { display: block; }
+.cl-sec-label { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.cl-sec-num { font-family: var(--mono); font-size: 12px; color: var(--ink3); min-width: 22px; }
+.cl-sec-title { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.cl-sec-badge { font-family: var(--mono); font-size: 10px; padding: 2px 7px; border-radius: 100px; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+.cl-sec-line { flex: 1; height: 1px; background: var(--border); }
+.cl-sec-tally { font-family: var(--mono); font-size: 11px; color: var(--ink3); white-space: nowrap; }
+.cards { display: flex; flex-direction: column; gap: 5px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 15px 18px; cursor: pointer; transition: all 0.15s; display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; }
+.card:hover { border-color: var(--border-strong); background: var(--surface2); }
+.card.checked { border-color: var(--gold-border); background: var(--gold-dim); }
+.checkbox { width: 18px; height: 18px; border: 1.5px solid var(--ink3); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-top: 2px; flex-shrink: 0; transition: all 0.15s; }
+.card.checked .checkbox { background: var(--gold); border-color: var(--gold); }
+.checkbox svg { display: none; }
+.card.checked .checkbox svg { display: block; }
+.card-title { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.4; margin-bottom: 3px; transition: color 0.15s; }
+.card.checked .card-title { color: var(--gold); }
+.card-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+.card-note { display: none; margin-top: 10px; width: 100%; background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 6px; padding: 9px 12px; font-family: 'Syne', sans-serif; font-size: 13px; color: var(--ink); resize: vertical; min-height: 38px; outline: none; transition: border-color 0.15s; line-height: 1.6; }
+.card.checked .card-note { display: block; }
+.card-note:focus { border-color: var(--gold); }
+.card-note::placeholder { color: var(--ink3); }
+.tag { display: inline-block; background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 4px; padding: 1px 6px; font-family: var(--mono); font-size: 11px; color: var(--ink2); margin: 2px 2px 2px 0; }
+.global-notes { margin: 20px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.global-notes-hdr { padding: 10px 16px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 10px; color: var(--ink2); letter-spacing: 0.08em; text-transform: uppercase; }
+.global-notes textarea { width: 100%; border: none; background: transparent; padding: 14px 16px; font-family: 'Syne', sans-serif; font-size: 14px; color: var(--ink); resize: vertical; min-height: 80px; outline: none; line-height: 1.7; }
+.global-notes textarea::placeholder { color: var(--ink3); }
+
+/* ─── KALKULACE ─── */
+.kalk-cat { margin-bottom: 28px; }
+.kalk-cat-label { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.kalk-cat-title { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.kalk-cat-line { flex: 1; height: 1px; background: var(--border); }
+.kalk-items { display: flex; flex-direction: column; gap: 5px; }
+.kalk-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 13px 18px; cursor: pointer; transition: all 0.15s; display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center; }
+.kalk-item:hover { border-color: var(--border-strong); background: var(--surface2); }
+.kalk-item.selected { border-color: var(--gold-border); background: var(--gold-dim); }
+.kalk-item .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--ink3); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.kalk-item.selected .checkbox { background: var(--gold); border-color: var(--gold); }
+.kalk-item.selected .checkbox svg { display: block; }
+.kalk-item .checkbox svg { display: none; }
+.kalk-item-name { font-size: 14px; font-weight: 500; color: var(--ink); transition: color 0.15s; }
+.kalk-item.selected .kalk-item-name { color: var(--gold); }
+.kalk-item-desc { font-size: 12px; color: var(--ink2); margin-top: 2px; }
+.kalk-item-price { font-family: var(--mono); font-size: 11px; color: var(--ink3); text-align: right; white-space: nowrap; }
+.kalk-item.selected .kalk-item-price { color: var(--gold); }
+.kalk-total-bar { background: var(--surface); border: 1px solid var(--gold-border); border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; margin: 20px 0; flex-wrap: wrap; gap: 10px; }
+.kalk-total-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.kalk-total-val { font-size: 26px; font-weight: 600; color: var(--gold); }
+.kalk-total-hours { font-family: var(--mono); font-size: 11px; color: var(--ink3); margin-top: 4px; }
+.kalk-note-txt { font-size: 12px; color: var(--ink3); line-height: 1.7; margin-bottom: 16px; }
+
+/* ─── SOUBORY ─── */
+.soubory-list { display: flex; flex-direction: column; gap: 6px; }
+.soubor-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s; }
+.soubor-item:hover { border-color: var(--border-strong); }
+.soubor-left { display: flex; align-items: center; gap: 12px; }
+.soubor-ico { width: 34px; height: 34px; background: var(--gold-dim); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.soubor-ico svg { width: 15px; height: 15px; stroke: var(--gold); }
+.soubor-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.soubor-type { font-family: var(--mono); font-size: 10px; color: var(--ink3); margin-top: 2px; }
+.soubor-link { font-family: var(--mono); font-size: 11px; color: var(--gold); background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: 5px; padding: 6px 12px; cursor: pointer; text-decoration: none; transition: all 0.15s; white-space: nowrap; }
+.soubor-link:hover { background: rgba(181,160,98,0.22); }
+
+/* ─── ADMIN: MODAL ─── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 16px; padding: 32px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+.modal h2 { font-size: 19px; font-weight: 500; margin-bottom: 22px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
+.soubor-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; align-items: center; margin-bottom: 6px; }
+.soubor-del-btn { background: none; border: none; color: var(--ink3); cursor: pointer; font-size: 18px; padding: 4px 6px; transition: color 0.15s; }
+.soubor-del-btn:hover { color: var(--danger); }
+
+/* ─── TOAST ─── */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface2); border: 1px solid var(--border-strong); border-radius: 8px; padding: 12px 18px; font-size: 13px; color: var(--ink); z-index: 200; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { border-color: var(--gold-border); color: var(--gold); }
+.toast.error { border-color: rgba(224,82,82,0.35); color: var(--danger); }
+
+@media (max-width: 560px) {
+  .top-nav { padding: 20px 20px; }
+  .page { padding: 0 20px 60px; }
+  .portal-tiles { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- MODAL: Nový / edit klient -->
+<div class="modal-overlay" id="modal-klient">
+  <div class="modal">
+    <h2 id="modal-klient-title">Nový klient</h2>
+    <input type="hidden" id="mk-id">
+    <div class="form-field">
+      <label class="form-label">Název klienta</label>
+      <input class="form-input" type="text" id="mk-jmeno" placeholder="Např. RK Novotný s.r.o.">
+    </div>
+    <div class="form-field">
+      <label class="form-label">Popis projektu</label>
+      <input class="form-input" type="text" id="mk-popis" placeholder="Krátký popis spolupráce">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-field">
+        <label class="form-label">Slug (URL)</label>
+        <input class="form-input" type="text" id="mk-slug" placeholder="novotny-rk" oninput="slugify(this)">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Heslo klienta</label>
+        <input class="form-input" type="text" id="mk-heslo" placeholder="Zvolte heslo">
+      </div>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Segment</label>
+      <select class="form-select" id="mk-segment">
+        <option value="general">Obecný</option>
+        <option value="reality">Reality</option>
+        <option value="gastro">Gastro</option>
+        <option value="eshop">E-shop</option>
+        <option value="osobni">Osobní brand</option>
+        <option value="firemni">Firemní web</option>
+        <option value="startup">Startup / pitch</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Soubory projektu</label>
+      <div id="mk-soubory"></div>
+      <button type="button" class="btn" style="margin-top:8px;font-size:12px;" onclick="addSouborRow()">+ Přidat soubor</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Zrušit</button>
+      <button class="btn btn-gold" onclick="saveKlient()">Uložit klienta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  LOGIN                                 -->
+<!-- ══════════════════════════════════════ -->
+<div class="view active" id="view-login">
+  <div class="login-page">
+    <div class="login-brand">
+      <div class="login-brand-name"><div class="login-brand-dot"></div>ELIATHOS</div>
+      <div class="login-brand-tag">LET THEM GROW</div>
+    </div>
+    <div class="login-card">
+      <h2 id="login-title">Vítejte</h2>
+      <p id="login-desc">Zadejte heslo pro přístup k portálu.</p>
+      <div class="form-field">
+        <label class="form-label">Heslo</label>
+        <input class="form-input" type="password" id="login-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-login" onclick="doLogin()">Vstoupit</button>
+      <p class="login-error" id="login-err">Nesprávné heslo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  ADMIN DASHBOARD                       -->
+<!-- ══════════════════════════════════════ -->
+<div class="view" id="view-admin">
+  <nav class="top-nav">
+    <div class="nav-brand"><div class="nav-brand-dot"></div>ELIATHOS</div>
+    <div class="nav-right">
+      <span class="nav-badge admin">Admin</span>
+      <button class="nav-logout" onclick="doLogout()">Odhlásit</button>
+    </div>
+  </nav>
+  <div class="page">
+    <div class="page-header">
+      <div>
+        <div class="page-eyebrow">Přehled klientů</div>
+        <h1>Moji <strong>klienti</strong></h1>
+      </div>
+      <button class="btn btn-gold" onclick="openKlientModal()">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2v10M2 7h10"/></svg>
+        Nový klient
+      </button>
+    </div>
+    <div class="sec-label">Aktivní</div>
+    <div class="klient-grid" id="admin-grid">
+      <div class="empty-state"><strong>Zatím žádní klienti</strong>Vytvořte prvního klienta tlačítkem nahoře.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  PORTAL (admin i klient)               -->
+<!-- ══════════════════════════════════════ -->
+<div class="view" id="view-portal">
+  <nav class="top-nav">
+    <div class="nav-brand"><div class="nav-brand-dot"></div>ELIATHOS</div>
+    <div class="nav-right">
+      <span class="nav-badge" id="portal-badge">—</span>
+      <button class="nav-logout" onclick="doLogout()">Odhlásit</button>
+    </div>
+  </nav>
+  <div class="page">
+    <div class="back-nav" id="portal-back-nav" style="display:none;">
+      <button class="back-btn" onclick="showView('admin')">← Přehled klientů</button>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current" id="portal-breadcrumb">—</span>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="btn" style="font-size:12px;" onclick="openKlientModal(currentKlient)">Upravit klienta</button>
+        <button class="btn btn-danger" style="font-size:12px;" onclick="deleteKlient()">Smazat</button>
+      </div>
+    </div>
+    <div class="portal-client-header">
+      <div class="page-eyebrow" id="portal-eyebrow">Váš prostor</div>
+      <div class="portal-client-name" id="portal-name">—</div>
+      <div class="portal-client-desc" id="portal-desc">—</div>
+    </div>
+    <div class="sec-label">Sekce</div>
+    <div class="portal-tiles">
+      <div class="ptile gold-tile" onclick="showSection('dotaznik')">
+        <div class="ptile-icon gold-bg">
+          <svg viewBox="0 0 18 18" fill="none" stroke="#B5A062" stroke-width="1.5" stroke-linecap="round"><path d="M10 1.5H4.5a1 1 0 00-1 1v13a1 1 0 001 1h9a1 1 0 001-1V6L10 1.5z"/><path d="M10 1.5V6h4.5"/><path d="M6 10h6M6 12.5h4"/></svg>
+        </div>
+        <div class="ptile-name">Vstupní dotazník</div>
+        <div class="ptile-desc">Sdělte nám vše o projektu, cílech a očekáváních.</div>
+        <div class="ptile-status empty" id="tile-dq-status">Nevyplněno</div>
+      </div>
+      <div class="ptile green-tile" onclick="showSection('kalkulace')">
+        <div class="ptile-icon green-bg">
+          <svg viewBox="0 0 18 18" fill="none" stroke="#7DC832" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="14" height="14" rx="2"/><path d="M6 6h2M6 9h6M6 12h4"/></svg>
+        </div>
+        <div class="ptile-name">Orientační kalkulace</div>
+        <div class="ptile-desc">Zaškrtněte co potřebujete a uvidíte odhad ceny.</div>
+        <div class="ptile-status empty" id="tile-kk-status">Nevyplněno</div>
+      </div>
+      <div class="ptile" onclick="showSection('soubory')">
+        <div class="ptile-icon gray-bg">
+          <svg viewBox="0 0 18 18" fill="none" stroke="#A8A89E" stroke-width="1.5" stroke-linecap="round"><path d="M10.5 1.5H4.5a1 1 0 00-1 1v13a1 1 0 001 1h9a1 1 0 001-1V6L10.5 1.5z"/><path d="M10.5 1.5V6H15"/></svg>
+        </div>
+        <div class="ptile-name">Soubory projektu</div>
+        <div class="ptile-desc">Logo, manuál a materiály ke stažení.</div>
+        <div class="ptile-status empty" id="tile-sf-status">Žádné soubory</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  DOTAZNÍK                              -->
+<!-- ══════════════════════════════════════ -->
+<div class="view" id="view-dotaznik">
+  <nav class="top-nav">
+    <div class="nav-brand"><div class="nav-brand-dot"></div>ELIATHOS</div>
+    <div class="nav-right">
+      <span class="nav-badge" id="dq-badge">—</span>
+      <button class="nav-logout" onclick="doLogout()">Odhlásit</button>
+    </div>
+  </nav>
+  <div class="page">
+    <div class="back-nav">
+      <button class="back-btn" onclick="showPortal()">← Zpět na přehled</button>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">Dotazník</span>
+      <div style="margin-left:auto;">
+        <div class="save-bar" style="margin:0;"><div class="save-dot" id="dq-dot"></div><span class="save-txt" id="dq-txt">Automatické ukládání</span></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div class="page-eyebrow">Vstupní dotazník</div>
+      <h1 style="font-size:26px;font-weight:300;letter-spacing:-0.01em;">Řekněte nám o vašem projektu</h1>
+    </div>
+
+    <div class="seg-pills" id="dq-pills">
+      <button class="seg-pill active" data-seg="general" onclick="dqSeg('general',this)">Obecný</button>
+      <button class="seg-pill" data-seg="reality" onclick="dqSeg('reality',this)">Reality</button>
+      <button class="seg-pill" data-seg="gastro" onclick="dqSeg('gastro',this)">Gastro</button>
+      <button class="seg-pill" data-seg="eshop" onclick="dqSeg('eshop',this)">E-shop</button>
+      <button class="seg-pill" data-seg="osobni" onclick="dqSeg('osobni',this)">Osobní brand</button>
+      <button class="seg-pill" data-seg="firemni" onclick="dqSeg('firemni',this)">Firemní web</button>
+      <button class="seg-pill" data-seg="startup" onclick="dqSeg('startup',this)">Startup</button>
+    </div>
+    <div class="progress-wrap">
+      <span class="progress-counter" id="dq-prog-txt">0 / 0</span>
+      <div class="progress-track"><div class="progress-fill" id="dq-prog-fill"></div></div>
+    </div>
+
+    <div class="cl-section" id="dq-g0">
+      <div class="cl-sec-label"><span class="cl-sec-num">01</span><span class="cl-sec-title">O vašem byznysu</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="g0-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Čím se vaše firma zabývá?</div><div class="card-desc">Obor, co děláte, co vás odlišuje od ostatních</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g0-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kdo jsou vaši zákazníci?</div><div class="card-desc">Věk, segment, <span class="tag">B2B</span><span class="tag">B2C</span> lokalita, kupní síla</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g0-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Co chcete projektem dosáhnout?</div><div class="card-desc">Hlavní cíl, proč teď, co se změní</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g0-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kdo jsou vaši hlavní konkurenti?</div><div class="card-desc">Co se vám u nich líbí, co vám vadí</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g0-4" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Máte existující vizuální identitu?</div><div class="card-desc">Logo, barvy, písmo — co zachovat, co změnit</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <div class="cl-section" id="dq-g1">
+      <div class="cl-sec-label"><span class="cl-sec-num">02</span><span class="cl-sec-title">Značka a vizuál</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="g1-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Jaké hodnoty má vaše značka vyjadřovat?</div><div class="card-desc">3–5 přídavných jmen jak chcete působit</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g1-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Máte reference na vizuální styl?</div><div class="card-desc">URL nebo popis — co se vám líbí, co ne</div><textarea class="card-note" placeholder="Napište URL nebo popis…"></textarea></div></div>
+        <div class="card" data-id="g1-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kde všude bude brand použit?</div><div class="card-desc"><span class="tag">web</span><span class="tag">tisk</span><span class="tag">social</span><span class="tag">reklama</span><span class="tag">polep</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g1-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Máte název a doménu potvrzené?</div><div class="card-desc">Dostupnost domény, zápis v OR</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <div class="cl-section" id="dq-g2">
+      <div class="cl-sec-label"><span class="cl-sec-num">03</span><span class="cl-sec-title">Spolupráce</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="g2-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Jaký je váš rozpočet?</div><div class="card-desc">Orientační číslo nebo rozmezí</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g2-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kdy chcete začít a jaký je deadline?</div><div class="card-desc">Datum nebo orientační horizont</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g2-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kdo bude hlavní kontakt na vaší straně?</div><div class="card-desc">Kdo schvaluje výstupy, kdo komunikuje</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="g2-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Jednorázový projekt nebo dlouhodobá spolupráce?</div><div class="card-desc">Retainer, správa social, průběžné úpravy</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment Reality -->
+    <div class="cl-section seg-sec" data-seg="reality" id="dq-reality">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Reality</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="r-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Správa nemovitostí — vlastní admin nebo systém?</div><div class="card-desc"><span class="tag">QARA</span><span class="tag">Realpad</span><span class="tag">XML feed</span><span class="tag">vlastní admin</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="r-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Jaký typ nemovitostí nabízíte?</div><div class="card-desc">Byty, domy, komerční, developerské projekty</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="r-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Jaké filtry potřebujete na výpisu?</div><div class="card-desc"><span class="tag">dispozice</span><span class="tag">cena</span><span class="tag">lokalita</span><span class="tag">dostupnost</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="r-3" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kalkulačky — jaké?</div><div class="card-desc"><span class="tag">hypoteční</span><span class="tag">výnos z pronájmu</span><span class="tag">porovnání</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="r-4" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Jazyková verze?</div><div class="card-desc">Čeština, angličtina, jiné jazyky</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment Gastro -->
+    <div class="cl-section seg-sec" data-seg="gastro" id="dq-gastro">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Gastro</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="ga-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Typ provozovny?</div><div class="card-desc"><span class="tag">restaurace</span><span class="tag">kavárna</span><span class="tag">bar</span><span class="tag">catering</span><span class="tag">food truck</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="ga-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Rezervační systém?</div><div class="card-desc"><span class="tag">Restu</span><span class="tag">Dotypos</span><span class="tag">vlastní</span><span class="tag">žádný</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="ga-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Online menu nebo rozvoz?</div><div class="card-desc"><span class="tag">Bolt Food</span><span class="tag">Wolt</span><span class="tag">vlastní</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment E-shop -->
+    <div class="cl-section seg-sec" data-seg="eshop" id="dq-eshop">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">E-shop</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="es-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Platforma?</div><div class="card-desc"><span class="tag">Shoptet</span><span class="tag">Shopify</span><span class="tag">WooCommerce</span><span class="tag">nová</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="es-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Kolik produktů plánujete?</div><div class="card-desc">Rozsah katalogu, kategorie</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="es-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Prodej v ČR nebo i zahraničí?</div><div class="card-desc">Vícejazyčnost, měny, DPH</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment Osobní brand -->
+    <div class="cl-section seg-sec" data-seg="osobni" id="dq-osobni">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Osobní brand</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="ob-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Čím se profilujete — jaká je vaše expertíza?</div><div class="card-desc">Obor, témata, na co chcete být znám</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="ob-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Cíl webu / brandu?</div><div class="card-desc"><span class="tag">klienti</span><span class="tag">speaking</span><span class="tag">kurzy</span><span class="tag">media</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="ob-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Tvoříte obsah?</div><div class="card-desc"><span class="tag">blog</span><span class="tag">podcast</span><span class="tag">video</span><span class="tag">newsletter</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <!-- Segment Startup -->
+    <div class="cl-section seg-sec" data-seg="startup" id="dq-startup">
+      <div class="cl-sec-label"><span class="cl-sec-num">04</span><span class="cl-sec-title">Startup</span><span class="cl-sec-badge">segment</span><div class="cl-sec-line"></div><span class="cl-sec-tally"></span></div>
+      <div class="cards">
+        <div class="card" data-id="st-0" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Fáze startupu?</div><div class="card-desc"><span class="tag">idea</span><span class="tag">MVP</span><span class="tag">seed</span><span class="tag">Series A+</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="st-1" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Pro koho je pitch deck?</div><div class="card-desc"><span class="tag">investoři</span><span class="tag">partneři</span><span class="tag">zákazníci</span></div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+        <div class="card" data-id="st-2" onclick="dqToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="card-title">Mezinárodní ambice — angličtina od začátku?</div><div class="card-desc">Všechny materiály EN nebo i lokální verze</div><textarea class="card-note" placeholder="Napište…"></textarea></div></div>
+      </div>
+    </div>
+
+    <div class="global-notes">
+      <div class="global-notes-hdr">Volné poznámky</div>
+      <textarea placeholder="Cokoliv dalšího co chcete sdělit…" id="dq-poznamky"></textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-gold" onclick="dqSaveManual()">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12V5l5-3 5 3v7H9V9H5v3H2z"/></svg>
+        Uložit dotazník
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  KALKULACE                             -->
+<!-- ══════════════════════════════════════ -->
+<div class="view" id="view-kalkulace">
+  <nav class="top-nav">
+    <div class="nav-brand"><div class="nav-brand-dot"></div>ELIATHOS</div>
+    <div class="nav-right">
+      <span class="nav-badge" id="kk-badge">—</span>
+      <button class="nav-logout" onclick="doLogout()">Odhlásit</button>
+    </div>
+  </nav>
+  <div class="page">
+    <div class="back-nav">
+      <button class="back-btn" onclick="showPortal()">← Zpět na přehled</button>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">Kalkulace</span>
+      <div style="margin-left:auto;">
+        <div class="save-bar" style="margin:0;"><div class="save-dot" id="kk-dot"></div><span class="save-txt" id="kk-txt">Automatické ukládání</span></div>
+      </div>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div class="page-eyebrow">Orientační kalkulace</div>
+      <h1 style="font-size:26px;font-weight:300;letter-spacing:-0.01em;">Zaškrtněte co potřebujete</h1>
+    </div>
+
+    <div class="kalk-cat">
+      <div class="kalk-cat-label"><span class="kalk-cat-title">Vizuální identita</span><div class="kalk-cat-line"></div></div>
+      <div class="kalk-items">
+        <div class="kalk-item" data-id="k-logo" data-hmin="8" data-hmax="20" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Logo</div><div class="kalk-item-desc">Primární značka, varianty, formáty</div></div><div class="kalk-item-price">8–20 hod</div></div>
+        <div class="kalk-item" data-id="k-brand" data-hmin="16" data-hmax="28" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Brand manuál</div><div class="kalk-item-desc">Barvy, písma, pravidla použití</div></div><div class="kalk-item-price">16–28 hod</div></div>
+        <div class="kalk-item" data-id="k-vizitky" data-hmin="4" data-hmax="8" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Vizitky</div><div class="kalk-item-desc">Návrh a podklady pro tisk</div></div><div class="kalk-item-price">4–8 hod</div></div>
+        <div class="kalk-item" data-id="k-tiskoviny" data-hmin="6" data-hmax="12" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Firemní tiskoviny</div><div class="kalk-item-desc">Hlavičkový papír, obálky, šablony</div></div><div class="kalk-item-price">6–12 hod</div></div>
+        <div class="kalk-item" data-id="k-podpis" data-hmin="2" data-hmax="4" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Emailový podpis</div><div class="kalk-item-desc">HTML podpis do emailového klienta</div></div><div class="kalk-item-price">2–4 hod</div></div>
+      </div>
+    </div>
+    <div class="kalk-cat">
+      <div class="kalk-cat-label"><span class="kalk-cat-title">Web a digitál</span><div class="kalk-cat-line"></div></div>
+      <div class="kalk-items">
+        <div class="kalk-item" data-id="k-webdesign" data-hmin="20" data-hmax="40" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Webdesign (UI/UX)</div><div class="kalk-item-desc">Návrh bez kódování, Figma/prototyp</div></div><div class="kalk-item-price">20–40 hod</div></div>
+        <div class="kalk-item" data-id="k-web" data-hmin="20" data-hmax="40" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Web vývoj</div><div class="kalk-item-desc">Realizace webu, statický nebo CMS</div></div><div class="kalk-item-price">20–40 hod</div></div>
+        <div class="kalk-item" data-id="k-qara" data-hmin="20" data-hmax="40" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Napojení systému (QARA / XML)</div><div class="kalk-item-desc">Integrace realitního nebo externího systému</div></div><div class="kalk-item-price">20–40 hod</div></div>
+        <div class="kalk-item" data-id="k-hypo" data-hmin="8" data-hmax="16" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Hypoteční kalkulačka</div><div class="kalk-item-desc">Interaktivní kalkulátor splátky</div></div><div class="kalk-item-price">8–16 hod</div></div>
+        <div class="kalk-item" data-id="k-social" data-hmin="6" data-hmax="14" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Social media šablony</div><div class="kalk-item-desc">Canva / Figma šablony pro sociální sítě</div></div><div class="kalk-item-price">6–14 hod</div></div>
+      </div>
+    </div>
+    <div class="kalk-cat">
+      <div class="kalk-cat-label"><span class="kalk-cat-title">Marketing a obsah</span><div class="kalk-cat-line"></div></div>
+      <div class="kalk-items">
+        <div class="kalk-item" data-id="k-strategie" data-hmin="8" data-hmax="16" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Marketingová strategie</div><div class="kalk-item-desc">Analýza, cíle, kanály, plán</div></div><div class="kalk-item-price">8–16 hod</div></div>
+        <div class="kalk-item" data-id="k-copy" data-hmin="4" data-hmax="10" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Copywriting</div><div class="kalk-item-desc">Texty webu, reklam, emailů</div></div><div class="kalk-item-price">4–10 hod</div></div>
+        <div class="kalk-item" data-id="k-brozura" data-hmin="8" data-hmax="16" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Brožura / katalog</div><div class="kalk-item-desc">Návrh a podklady pro tisk</div></div><div class="kalk-item-price">8–16 hod</div></div>
+        <div class="kalk-item" data-id="k-ads" data-hmin="6" data-hmax="12" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Správa reklam (Meta / Google)</div><div class="kalk-item-desc">Nastavení a správa kampaní</div></div><div class="kalk-item-price">6–12 hod / měs.</div></div>
+      </div>
+    </div>
+
+    <div id="kk-total-wrap" style="display:none;">
+      <div class="kalk-total-bar">
+        <div>
+          <div class="kalk-total-label">Orientační cena projektu</div>
+          <div class="kalk-total-val" id="kk-total-val">—</div>
+          <div class="kalk-total-hours" id="kk-total-hours">—</div>
+        </div>
+      </div>
+      <p class="kalk-note-txt">Bez DPH. Cena nezahrnuje tisk, média, domény a hosting. Finální nabídku upřesníme po konzultaci.</p>
+    </div>
+    <button class="btn btn-gold" onclick="kkSaveManual()">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12V5l5-3 5 3v7H9V9H5v3H2z"/></svg>
+      Uložit kalkulaci
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!--  SOUBORY                               -->
+<!-- ══════════════════════════════════════ -->
+<div class="view" id="view-soubory">
+  <nav class="top-nav">
+    <div class="nav-brand"><div class="nav-brand-dot"></div>ELIATHOS</div>
+    <div class="nav-right">
+      <span class="nav-badge" id="sf-badge">—</span>
+      <button class="nav-logout" onclick="doLogout()">Odhlásit</button>
+    </div>
+  </nav>
+  <div class="page">
+    <div class="back-nav">
+      <button class="back-btn" onclick="showPortal()">← Zpět na přehled</button>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">Soubory projektu</span>
+    </div>
+    <div style="margin-bottom:24px;">
+      <div class="page-eyebrow">Soubory projektu</div>
+      <h1 style="font-size:26px;font-weight:300;letter-spacing:-0.01em;">Materiály ke stažení</h1>
+    </div>
+    <div class="soubory-list" id="soubory-list"></div>
+    <div id="soubory-empty" style="display:none;text-align:center;padding:48px 24px;font-size:14px;color:var(--ink3);">Zatím žádné soubory. Brzy přidáme materiály k vašemu projektu.</div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://bofeaualyjhxemdewvvg.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvZmVhdWFseWpoeGVtZGV3dnZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDQ0NTAsImV4cCI6MjA5MTkyMDQ1MH0.hhV0UgoSQ4a2PWPHjpiEpsIU_0YGQWoVQANp49jrm2E';
+const ADMIN_PWD = 'eliathos2024admin';
+const RATE_MIN = 1200, RATE_MAX = 2000;
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let isAdmin = false;
+let currentKlient = null;
+let currentSchuzkaId = null;
+let currentDqSeg = 'general';
+let dqTimer = null, kkTimer = null;
+
+// ─── HELPERS ───
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show ' + type;
+  setTimeout(() => el.className = 'toast', 2500);
+}
+function setBadge(ids, label, cls) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = label; el.className = 'nav-badge ' + cls; }
+  });
+}
+function setSave(prefix, state) {
+  const dot = document.getElementById(prefix + '-dot');
+  const txt = document.getElementById(prefix + '-txt');
+  if (!dot) return;
+  dot.className = 'save-dot ' + state;
+  txt.textContent = state === 'saving' ? 'Ukládám…' : state === 'saved' ? 'Uloženo' : 'Automatické ukládání';
+}
+function slugify(input) {
+  input.value = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+}
+
+// ─── LOGIN ───
+function getSlug() {
+  return new URLSearchParams(window.location.search).get('k') || '';
+}
+
+async function doLogin() {
+  const pwd = document.getElementById('login-pwd').value.trim();
+  const err = document.getElementById('login-err');
+  err.style.display = 'none';
+
+  if (pwd === ADMIN_PWD) {
+    isAdmin = true;
+    sessionStorage.setItem('eli_admin', '1');
+    loadAdminDashboard();
+    return;
+  }
+
+  const slug = getSlug();
+  let query = sb.from('klienti').select('*').eq('heslo', pwd).eq('aktivni', true);
+  if (slug) query = query.eq('slug', slug);
+  const { data } = await query.maybeSingle();
+
+  if (!data) { err.style.display = 'block'; return; }
+  currentKlient = data;
+  sessionStorage.setItem('eli_klient', data.id);
+  loadPortal(false);
+}
+
+async function checkSession() {
+  if (sessionStorage.getItem('eli_admin')) {
+    isAdmin = true; loadAdminDashboard(); return;
+  }
+  const kid = sessionStorage.getItem('eli_klient');
+  if (kid) {
+    const { data } = await sb.from('klienti').select('*').eq('id', kid).single();
+    if (data) { currentKlient = data; loadPortal(false); return; }
+  }
+  const slug = getSlug();
+  if (slug) {
+    const { data } = await sb.from('klienti').select('jmeno').eq('slug', slug).single();
+    if (data) {
+      document.getElementById('login-title').textContent = 'Vítejte, ' + data.jmeno;
+      document.title = 'Eliathos · ' + data.jmeno;
+    }
+  }
+  showView('login');
+}
+
+function doLogout() {
+  sessionStorage.removeItem('eli_admin');
+  sessionStorage.removeItem('eli_klient');
+  isAdmin = false; currentKlient = null; currentSchuzkaId = null;
+  showView('login');
+}
+
+// ─── ADMIN DASHBOARD ───
+async function loadAdminDashboard() {
+  setBadge(['portal-badge','dq-badge','kk-badge','sf-badge'], 'Admin', 'admin');
+  const { data } = await sb.from('klienti').select('*, schuzky(checklist, kalkulace)').order('created_at', { ascending: false });
+  const grid = document.getElementById('admin-grid');
+  grid.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><strong>Zatím žádní klienti</strong>Vytvořte prvního klienta tlačítkem nahoře.</div>';
+    showView('admin'); return;
+  }
+
+  data.forEach(k => {
+    const s = k.schuzky?.[0];
+    const cl = s?.checklist || {};
+    const kal = s?.kalkulace || {};
+    const soubory = k.soubory || [];
+    const clChecked = Object.values(cl).filter(v => v.checked).length;
+    const clTotal = Object.keys(cl).length;
+    const kkCount = Object.values(kal).filter(Boolean).length;
+
+    const dqClass = clTotal > 0 ? (clChecked === clTotal ? 'green-filled' : 'filled') : 'empty';
+    const kkClass = kkCount > 0 ? 'filled' : 'empty';
+    const sfClass = soubory.length > 0 ? 'filled' : 'empty';
+
+    const card = document.createElement('div');
+    card.className = 'klient-card';
+    card.innerHTML = `
+      <div class="klient-card-name">${k.jmeno}</div>
+      ${k.popis ? '<div class="klient-card-desc">' + k.popis + '</div>' : '<div style="height:4px;"></div>'}
+      <div class="klient-card-icons">
+        <div class="status-icon ${dqClass}" title="Dotazník">
+          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5H3.5a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1V5.5L8 1.5z"/><path d="M8 1.5V5.5h4"/><path d="M5 8.5h5M5 11h3"/></svg>
+        </div>
+        <div class="status-icon ${kkClass}" title="Kalkulace">
+          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="11" height="11" rx="1.5"/><path d="M5 5h2M5 7.5h5M5 10h4"/></svg>
+        </div>
+        <div class="status-icon ${sfClass}" title="Soubory">
+          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h7a1 1 0 001-1V5L8.5 1.5z"/><path d="M8.5 1.5V5H12"/></svg>
+        </div>
+      </div>`;
+    card.addEventListener('click', () => { currentKlient = k; loadPortal(true); });
+    grid.appendChild(card);
+  });
+  showView('admin');
+}
+
+// ─── PORTAL ───
+async function loadPortal(fromAdmin) {
+  const k = currentKlient;
+  document.getElementById('portal-name').textContent = k.jmeno;
+  document.getElementById('portal-desc').textContent = k.popis || 'Vítejte ve vašem klientském prostoru.';
+
+  if (isAdmin) {
+    setBadge(['portal-badge'], 'Admin', 'admin');
+    document.getElementById('portal-eyebrow').textContent = 'Pohled klienta · ' + k.jmeno;
+    document.getElementById('portal-back-nav').style.display = 'flex';
+    document.getElementById('portal-breadcrumb').textContent = k.jmeno;
+  } else {
+    setBadge(['portal-badge'], k.jmeno, 'klient');
+    document.getElementById('portal-eyebrow').textContent = 'Váš prostor';
+    document.getElementById('portal-back-nav').style.display = 'none';
+  }
+
+  const { data: schuzky } = await sb.from('schuzky').select('*').eq('klient_id', k.id).order('created_at', { ascending: false });
+  if (schuzky && schuzky.length > 0) {
+    currentSchuzkaId = schuzky[0].id;
+    const s = schuzky[0];
+    const cl = s.checklist || {};
+    const kal = s.kalkulace || {};
+    const clChecked = Object.values(cl).filter(v => v.checked).length;
+    const clTotal = Object.keys(cl).length;
+    const kkCount = Object.values(kal).filter(Boolean).length;
+
+    const dqEl = document.getElementById('tile-dq-status');
+    if (clTotal > 0) {
+      dqEl.textContent = clChecked + ' / ' + clTotal + ' otázek vyplněno';
+      dqEl.className = 'ptile-status ' + (clChecked === clTotal ? 'done' : 'partial');
+    }
+    const kkEl = document.getElementById('tile-kk-status');
+    if (kkCount > 0) {
+      kkEl.textContent = kkCount + ' položek vybráno';
+      kkEl.className = 'ptile-status done';
+    }
+  } else {
+    const datum = new Date().toLocaleDateString('cs-CZ');
+    const { data: ns } = await sb.from('schuzky').insert({ klient_id: k.id, datum, segment: k.segment || 'general', checklist: {}, poznamky: '', kalkulace: {} }).select().single();
+    if (ns) currentSchuzkaId = ns.id;
+  }
+
+  const soubory = k.soubory || [];
+  const sfEl = document.getElementById('tile-sf-status');
+  sfEl.textContent = soubory.length > 0 ? soubory.length + ' souborů' : 'Žádné soubory';
+  sfEl.className = 'ptile-status ' + (soubory.length > 0 ? 'done' : 'empty');
+
+  showView('portal');
+}
+
+function showPortal() {
+  if (isAdmin) loadAdminDashboard();
+  else { currentKlient && loadPortal(false); }
+}
+
+function showSection(sec) {
+  if (sec === 'dotaznik') loadDotaznik();
+  else if (sec === 'kalkulace') loadKalkulace();
+  else if (sec === 'soubory') loadSoubory();
+}
+
+// ─── DOTAZNIK ───
+async function loadDotaznik() {
+  if (!currentSchuzkaId) return;
+  const { data: s } = await sb.from('schuzky').select('*').eq('id', currentSchuzkaId).single();
+  if (!s) return;
+
+  currentDqSeg = s.segment || 'general';
+  document.querySelectorAll('#dq-pills .seg-pill').forEach(p => p.classList.toggle('active', p.dataset.seg === currentDqSeg));
+  document.querySelectorAll('#view-dotaznik .seg-sec').forEach(sec => sec.classList.toggle('visible', sec.dataset.seg === currentDqSeg));
+
+  const cl = s.checklist || {};
+  document.querySelectorAll('#view-dotaznik .card').forEach(card => {
+    const cid = card.dataset.id;
+    card.classList.remove('checked');
+    card.querySelector('.card-note').value = '';
+    if (cl[cid]) {
+      if (cl[cid].checked) card.classList.add('checked');
+      if (cl[cid].note) card.querySelector('.card-note').value = cl[cid].note;
+    }
+  });
+  document.getElementById('dq-poznamky').value = s.poznamky || '';
+
+  const badge = isAdmin ? 'Admin' : currentKlient.jmeno;
+  const cls = isAdmin ? 'admin' : 'klient';
+  setBadge(['dq-badge'], badge, cls);
+
+  dqRenumber(); dqUpdateProgress(); setSave('dq', 'saved');
+  showView('dotaznik');
+}
+
+function dqSeg(seg, btn) {
+  currentDqSeg = seg;
+  document.querySelectorAll('#dq-pills .seg-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#view-dotaznik .seg-sec').forEach(s => s.classList.toggle('visible', s.dataset.seg === seg));
+  dqRenumber(); dqUpdateProgress(); dqScheduleSave();
+}
+
+function dqRenumber() {
+  let n = 1;
+  document.querySelectorAll('#view-dotaznik .cl-section').forEach(sec => {
+    if (window.getComputedStyle(sec).display === 'none') return;
+    const el = sec.querySelector('.cl-sec-num');
+    if (el) el.textContent = String(n).padStart(2, '0');
+    n++;
+    const tally = sec.querySelector('.cl-sec-tally');
+    if (tally) {
+      const all = sec.querySelectorAll('.card').length;
+      const done = sec.querySelectorAll('.card.checked').length;
+      tally.textContent = done + ' / ' + all;
+    }
+  });
+}
+
+function dqToggle(card) {
+  if (event.target.tagName === 'TEXTAREA') return;
+  card.classList.toggle('checked');
+  dqRenumber(); dqUpdateProgress(); dqScheduleSave();
+}
+
+function dqUpdateProgress() {
+  const visible = [...document.querySelectorAll('#view-dotaznik .cl-section')].filter(s => window.getComputedStyle(s).display !== 'none');
+  const all = visible.flatMap(s => [...s.querySelectorAll('.card')]);
+  const done = all.filter(c => c.classList.contains('checked'));
+  const pct = all.length > 0 ? Math.round((done.length / all.length) * 100) : 0;
+  document.getElementById('dq-prog-fill').style.width = pct + '%';
+  document.getElementById('dq-prog-txt').textContent = done.length + ' / ' + all.length;
+}
+
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('card-note') || e.target.id === 'dq-poznamky') {
+    if (document.getElementById('view-dotaznik').classList.contains('active')) dqScheduleSave();
+  }
+});
+
+function dqScheduleSave() {
+  setSave('dq', 'saving');
+  clearTimeout(dqTimer);
+  dqTimer = setTimeout(() => dqDoSave(false), 1000);
+}
+
+async function dqDoSave(manual) {
+  if (!currentSchuzkaId) return;
+  const checklist = {};
+  document.querySelectorAll('#view-dotaznik .card').forEach(card => {
+    checklist[card.dataset.id] = { checked: card.classList.contains('checked'), note: card.querySelector('.card-note').value };
+  });
+  const poznamky = document.getElementById('dq-poznamky').value;
+  const { error } = await sb.from('schuzky').update({ checklist, poznamky, segment: currentDqSeg }).eq('id', currentSchuzkaId);
+  if (error) { setSave('dq', ''); if (manual) toast('Chyba uložení', 'error'); }
+  else { setSave('dq', 'saved'); if (manual) toast('Dotazník uložen', 'success'); }
+}
+function dqSaveManual() { dqDoSave(true); }
+
+// ─── KALKULACE ───
+async function loadKalkulace() {
+  if (!currentSchuzkaId) return;
+  const { data: s } = await sb.from('schuzky').select('kalkulace').eq('id', currentSchuzkaId).single();
+  const kal = s?.kalkulace || {};
+  document.querySelectorAll('#view-kalkulace .kalk-item').forEach(item => {
+    item.classList.toggle('selected', !!kal[item.dataset.id]);
+  });
+  kkUpdateTotal(); setSave('kk', 'saved');
+  const badge = isAdmin ? 'Admin' : currentKlient.jmeno;
+  const cls = isAdmin ? 'admin' : 'klient';
+  setBadge(['kk-badge'], badge, cls);
+  showView('kalkulace');
+}
+
+function kkToggle(item) {
+  item.classList.toggle('selected');
+  kkUpdateTotal(); kkScheduleSave();
+}
+
+function kkUpdateTotal() {
+  const selected = [...document.querySelectorAll('#view-kalkulace .kalk-item.selected')];
+  const wrap = document.getElementById('kk-total-wrap');
+  if (selected.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  let hMin = 0, hMax = 0;
+  selected.forEach(i => { hMin += parseInt(i.dataset.hmin); hMax += parseInt(i.dataset.hmax); });
+  document.getElementById('kk-total-val').textContent = (hMin * RATE_MIN).toLocaleString('cs-CZ') + ' – ' + (hMax * RATE_MAX).toLocaleString('cs-CZ') + ' Kč';
+  document.getElementById('kk-total-hours').textContent = hMin + '–' + hMax + ' hod · sazba 1 200–2 000 Kč/hod';
+}
+
+function kkScheduleSave() {
+  setSave('kk', 'saving');
+  clearTimeout(kkTimer);
+  kkTimer = setTimeout(() => kkDoSave(false), 1000);
+}
+
+async function kkDoSave(manual) {
+  if (!currentSchuzkaId) return;
+  const kalkulace = {};
+  document.querySelectorAll('#view-kalkulace .kalk-item').forEach(i => { kalkulace[i.dataset.id] = i.classList.contains('selected'); });
+  const { error } = await sb.from('schuzky').update({ kalkulace }).eq('id', currentSchuzkaId);
+  if (error) { setSave('kk', ''); if (manual) toast('Chyba uložení', 'error'); }
+  else { setSave('kk', 'saved'); if (manual) toast('Kalkulace uložena', 'success'); }
+}
+function kkSaveManual() { kkDoSave(true); }
+
+// ─── SOUBORY ───
+function loadSoubory() {
+  const soubory = currentKlient?.soubory || [];
+  const list = document.getElementById('soubory-list');
+  const empty = document.getElementById('soubory-empty');
+  list.innerHTML = '';
+  const badge = isAdmin ? 'Admin' : currentKlient.jmeno;
+  const cls = isAdmin ? 'admin' : 'klient';
+  setBadge(['sf-badge'], badge, cls);
+  if (soubory.length === 0) { empty.style.display = 'block'; showView('soubory'); return; }
+  empty.style.display = 'none';
+  soubory.forEach(s => {
+    list.innerHTML += `<div class="soubor-item">
+      <div class="soubor-left">
+        <div class="soubor-ico"><svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M9 1.5H4.5a1 1 0 00-1 1v11a1 1 0 001 1h6a1 1 0 001-1V5L9 1.5z"/><path d="M9 1.5V5H12.5"/></svg></div>
+        <div><div class="soubor-name">${s.nazev}</div><div class="soubor-type">${s.typ || 'Soubor'}</div></div>
+      </div>
+      <a class="soubor-link" href="${s.url}" target="_blank">Otevřít →</a>
+    </div>`;
+  });
+  showView('soubory');
+}
+
+// ─── ADMIN: MODAL KLIENT ───
+function openKlientModal(k) {
+  document.getElementById('modal-klient-title').textContent = k ? 'Upravit klienta' : 'Nový klient';
+  document.getElementById('mk-id').value = k?.id || '';
+  document.getElementById('mk-jmeno').value = k?.jmeno || '';
+  document.getElementById('mk-popis').value = k?.popis || '';
+  document.getElementById('mk-slug').value = k?.slug || '';
+  document.getElementById('mk-heslo').value = k?.heslo || '';
+  document.getElementById('mk-segment').value = k?.segment || 'general';
+  const souboryEl = document.getElementById('mk-soubory');
+  souboryEl.innerHTML = '';
+  (k?.soubory || []).forEach(s => addSouborRow(s.nazev, s.url, s.typ));
+  document.getElementById('modal-klient').classList.add('open');
+  setTimeout(() => document.getElementById('mk-jmeno').focus(), 100);
+}
+function closeModal() { document.getElementById('modal-klient').classList.remove('open'); }
+document.getElementById('modal-klient').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+function addSouborRow(nazev='', url='', typ='') {
+  const el = document.getElementById('mk-soubory');
+  const row = document.createElement('div');
+  row.className = 'soubor-row';
+  row.innerHTML = `<input class="form-input" type="text" placeholder="Název" value="${nazev}" style="font-size:13px;padding:9px 12px;">
+    <input class="form-input" type="text" placeholder="Google Drive URL" value="${url}" style="font-size:13px;padding:9px 12px;">
+    <button type="button" class="soubor-del-btn" onclick="this.parentElement.remove()">×</button>`;
+  el.appendChild(row);
+}
+
+async function saveKlient() {
+  const jmeno = document.getElementById('mk-jmeno').value.trim();
+  const popis = document.getElementById('mk-popis').value.trim();
+  const slug = document.getElementById('mk-slug').value.trim();
+  const heslo = document.getElementById('mk-heslo').value.trim();
+  const segment = document.getElementById('mk-segment').value;
+  const editId = document.getElementById('mk-id').value;
+  if (!jmeno) { toast('Zadej jméno klienta', 'error'); return; }
+  if (!heslo) { toast('Zadej heslo', 'error'); return; }
+
+  const soubory = [];
+  document.querySelectorAll('#mk-soubory .soubor-row').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const n = inputs[0].value.trim(), u = inputs[1].value.trim();
+    if (n && u) soubory.push({ nazev: n, url: u, typ: 'Dokument' });
+  });
+
+  const payload = { jmeno, popis, slug: slug || null, heslo, segment, soubory, aktivni: true };
+  let error;
+  if (editId) {
+    ({ error } = await sb.from('klienti').update(payload).eq('id', editId));
+    if (!error) currentKlient = { ...currentKlient, ...payload, id: editId };
+  } else {
+    const { data, error: ie } = await sb.from('klienti').insert(payload).select().single();
+    error = ie;
+    if (!error && data) {
+      const datum = new Date().toLocaleDateString('cs-CZ');
+      await sb.from('schuzky').insert({ klient_id: data.id, datum, segment, checklist: {}, poznamky: '', kalkulace: {} });
+    }
+  }
+  if (error) { toast('Chyba: ' + error.message, 'error'); return; }
+  closeModal();
+  toast(editId ? 'Klient aktualizován' : 'Klient vytvořen', 'success');
+  loadAdminDashboard();
+}
+
+async function deleteKlient() {
+  if (!currentKlient) return;
+  if (!confirm('Opravdu smazat klienta ' + currentKlient.jmeno + '? Akce je nevratná.')) return;
+  await sb.from('schuzky').delete().eq('klient_id', currentKlient.id);
+  await sb.from('klienti').delete().eq('id', currentKlient.id);
+  toast('Klient smazán');
+  currentKlient = null; currentSchuzkaId = null;
+  loadAdminDashboard();
+}
+
+// ─── INIT ───
+const slug = getSlug();
+if (slug) {
+  sb.from('klienti').select('jmeno').eq('slug', slug).single().then(({ data }) => {
+    if (data) {
+      document.getElementById('login-title').textContent = 'Vítejte, ' + data.jmeno;
+      document.title = 'Eliathos · ' + data.jmeno;
+    }
+  });
+}
+checkSession();
+</script>
+</body>
+</html>
