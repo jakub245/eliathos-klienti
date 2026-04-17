@@ -787,7 +787,10 @@ async function loadAdminDashboard() {
         ${k.slug ? '<span class="klient-slug-badge">/' + k.slug + '</span>' : '<span class="klient-slug-badge" style="color:var(--ink3);">bez slug</span>'}
         ${inviteText ? '<button class="copy-invite-btn" onclick="copyInvite(event, this, ' + JSON.stringify(inviteText) + ')">Kopírovat pozvánku</button>' : '<span style="font-size:11px;color:var(--ink3);font-family:var(--mono);">nastav slug + heslo</span>'}
       </div>`;
-    card.addEventListener('click', () => { currentKlient = k; loadPortal(true); });
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.klient-card-copy')) return;
+      currentKlient = k; loadPortal(true);
+    });
     grid.appendChild(card);
   });
   showView('admin');
