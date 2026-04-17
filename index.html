@@ -15,8 +15,8 @@
   --surface2: #222220;
   --surface3: #2A2A27;
   --ink: #EEEEE8;
-  --ink2: #A8A89E;
-  --ink3: #6E6E66;
+  --ink2: #C8C8C0;
+  --ink3: #909088;
   --gold: #B5A062;
   --gold-dim: rgba(181,160,98,0.12);
   --gold-border: rgba(181,160,98,0.28);
@@ -91,10 +91,10 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .klient-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 32px; }
 .klient-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.15s; }
 .klient-card:hover { border-color: var(--gold-border); background: var(--surface2); }
-.klient-card-name { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
-.klient-card-desc { font-size: 12px; color: var(--ink2); margin-bottom: 14px; line-height: 1.5; }
+.klient-card-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.klient-card-desc { font-size: 13px; color: var(--ink2); margin-bottom: 14px; line-height: 1.5; }
 .klient-card-icons { display: flex; gap: 8px; }
-.status-icon { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--surface3); transition: all 0.15s; }
+.status-icon { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-strong); background: var(--surface3); transition: all 0.15s; }
 .status-icon svg { width: 15px; height: 15px; }
 .status-icon.filled { background: var(--gold-dim); border-color: var(--gold-border); }
 .status-icon.filled svg { stroke: var(--gold); }
@@ -226,6 +226,13 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .soubor-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; align-items: center; margin-bottom: 6px; }
 .soubor-del-btn { background: none; border: none; color: var(--ink3); cursor: pointer; font-size: 18px; padding: 4px 6px; transition: color 0.15s; }
 .soubor-del-btn:hover { color: var(--danger); }
+
+
+.klient-card-copy { display: flex; align-items: center; gap: 7px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.copy-invite-btn { flex: 1; font-family: var(--mono); font-size: 10px; color: var(--gold); background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: 5px; padding: 7px 10px; cursor: pointer; text-align: center; transition: all 0.15s; letter-spacing: 0.04em; white-space: nowrap; }
+.copy-invite-btn:hover { background: rgba(181,160,98,0.22); }
+.copy-invite-btn.copied { color: var(--accent); background: var(--accent-dim); border-color: rgba(125,200,50,0.25); }
+.klient-slug-badge { font-family: var(--mono); font-size: 10px; color: var(--ink3); background: var(--surface3); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
 
 /* ─── TOAST ─── */
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface2); border: 1px solid var(--border-strong); border-radius: 8px; padding: 12px 18px; font-size: 13px; color: var(--ink); z-index: 200; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; }
@@ -758,6 +765,10 @@ async function loadAdminDashboard() {
 
     const card = document.createElement('div');
     card.className = 'klient-card';
+    const portalUrl = k.slug ? (window.location.origin + window.location.pathname + '?k=' + k.slug) : null;
+    const inviteText = portalUrl
+      ? 'Dobrý den,\n\npřipravil jsem pro vás klientský portál Eliathos.\n\nOdkaz: ' + portalUrl + '\nHeslo: ' + (k.heslo || '—') + '\n\nTěším se na spolupráci!'
+      : null;
     card.innerHTML = `
       <div class="klient-card-name">${k.jmeno}</div>
       ${k.popis ? '<div class="klient-card-desc">' + k.popis + '</div>' : '<div style="height:4px;"></div>'}
@@ -771,6 +782,10 @@ async function loadAdminDashboard() {
         <div class="status-icon ${sfClass}" title="Soubory">
           <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h7a1 1 0 001-1V5L8.5 1.5z"/><path d="M8.5 1.5V5H12"/></svg>
         </div>
+      </div>
+      <div class="klient-card-copy">
+        ${k.slug ? '<span class="klient-slug-badge">/' + k.slug + '</span>' : '<span class="klient-slug-badge" style="color:var(--ink3);">bez slug</span>'}
+        ${inviteText ? '<button class="copy-invite-btn" onclick="copyInvite(event, this, ' + JSON.stringify(inviteText) + ')">Kopírovat pozvánku</button>' : '<span style="font-size:11px;color:var(--ink3);font-family:var(--mono);">nastav slug + heslo</span>'}
       </div>`;
     card.addEventListener('click', () => { currentKlient = k; loadPortal(true); });
     grid.appendChild(card);
@@ -1076,6 +1091,16 @@ async function deleteKlient() {
   toast('Klient smazán');
   currentKlient = null; currentSchuzkaId = null;
   loadAdminDashboard();
+}
+
+
+function copyInvite(e, btn, text) {
+  e.stopPropagation();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Zkopírováno!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Kopírovat pozvánku'; btn.classList.remove('copied'); }, 2200);
+  });
 }
 
 // ─── INIT ───
