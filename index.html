@@ -741,7 +741,7 @@ async function loadAdminDashboard() {
   setBadge(['portal-badge','dq-badge','kk-badge','sf-badge'], 'Admin', 'admin');
   const { data, error: ke } = await sb.from('klienti').select('*').eq('aktivni', true).order('created_at', { ascending: false });
   if (ke) { console.error(ke); toast('Chyba načítání klientů', 'error'); showView('admin'); return; }
-  const { data: vsechnySchuzky } = await sb.from('schuzky').select('klient_id, checklist, kalkulace');
+  const { data: vsechnySchuzky } = await sb.from('schuzky').select('klient_id,checklist,kalkulace');
   const grid = document.getElementById('admin-grid');
   grid.innerHTML = '';
 
@@ -785,13 +785,28 @@ async function loadAdminDashboard() {
       </div>
       <div class="klient-card-copy">
         ${k.slug ? '<span class="klient-slug-badge">/' + k.slug + '</span>' : '<span class="klient-slug-badge" style="color:var(--ink3);">bez slug</span>'}
-        ${inviteText ? '<button class="copy-invite-btn" onclick="copyInvite(event, this, ' + JSON.stringify(inviteText) + ')">Kopírovat pozvánku</button>' : '<span style="font-size:11px;color:var(--ink3);font-family:var(--mono);">nastav slug + heslo</span>'}
+        ${inviteText ? '<button class="copy-invite-btn" data-invite="' + encodeURIComponent(inviteText) + '">Kopírovat pozvánku</button>' : '<span style="font-size:11px;color:var(--ink3);font-family:var(--mono);">nastav slug + heslo</span>'}
       </div>`;
     card.addEventListener('click', (e) => {
       if (e.target.closest('.klient-card-copy')) return;
       currentKlient = k; loadPortal(true);
     });
     grid.appendChild(card);
+    const copyBtn = card.querySelector('.copy-invite-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        const text = decodeURIComponent(this.dataset.invite);
+        navigator.clipboard.writeText(text).then(() => {
+          this.textContent = 'Zkopírováno!';
+          this.classList.add('copied');
+          toast('Pozvánka zkopírována', 'success');
+          const self = this;
+          setTimeout(() => { self.textContent = 'Kopírovat pozvánku'; self.classList.remove('copied'); }, 2500);
+        }).catch(err => { console.error(err); toast('Chyba: ' + err.message, 'error'); });
+      });
+    }
   });
   showView('admin');
 }
@@ -1097,34 +1112,7 @@ async function deleteKlient() {
 }
 
 
-function copyInvite(e, btn, text) {
-  e.stopPropagation();
-  e.preventDefault();
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'Zkopírováno!';
-    btn.classList.add('copied');
-    toast('Pozvánka zkopírována', 'success');
-    setTimeout(() => { btn.textContent = 'Kopírovat pozvánku'; btn.classList.remove('copied'); }, 2500);
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:absolute;left:-9999px;';
-    document.body.appendChild(ta);
-    ta.select();
-    ta.setSelectionRange(0, 99999);
-    const ok = document.execCommand('copy');
-    document.body.removeChild(ta);
-    if (ok) {
-      btn.textContent = 'Zkopírováno!';
-      btn.classList.add('copied');
-      toast('Pozvánka zkopírována', 'success');
-      setTimeout(() => { btn.textContent = 'Kopírovat pozvánku'; btn.classList.remove('copied'); }, 2500);
-    } else {
-      toast('Nepodařilo se zkopírovat — zkus znovu', 'error');
-    }
-  });
-}
+// copyInvite handled via event listener
 
 // ─── INIT ───
 const slug = getSlug();
