@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eliathos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,9 +25,9 @@
   --border: rgba(255,255,255,0.07);
   --border-strong: rgba(255,255,255,0.12);
   --danger: #E05252;
-  --mono: 'DM Mono', monospace;
+  --mono: 'Inter', sans-serif;
 }
-html { font-size: 15px; }
+html { font-size: 16.5px; }
 body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
 /* VIEWS */
@@ -41,11 +41,11 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .login-brand-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
 .login-brand-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--ink3); }
 .login-card { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 18px; padding: 40px 36px; width: 100%; max-width: 460px; }
-.login-card h2 { font-size: 24px; font-weight: 500; margin-bottom: 8px; line-height: 1.2; }
-.login-card p { font-size: 14px; color: var(--ink2); margin-bottom: 28px; line-height: 1.6; }
+.login-card h2 { font-size: 26px; font-weight: 500; margin-bottom: 8px; line-height: 1.2; }
+.login-card p { font-size: 15px; color: var(--ink2); margin-bottom: 28px; line-height: 1.6; }
 .form-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
-.form-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.1em; text-transform: uppercase; }
-.form-input { background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 8px; padding: 13px 16px; font-family: 'Syne', sans-serif; font-size: 14px; color: var(--ink); outline: none; transition: border-color 0.15s; width: 100%; }
+.form-label { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.04em; text-transform: uppercase; }
+.form-input { background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 8px; padding: 13px 16px; font-family: 'Syne', sans-serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.15s; width: 100%; }
 .form-input:focus { border-color: var(--gold); }
 .form-input::placeholder { color: var(--ink3); }
 .form-select { background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 8px; padding: 13px 16px; font-family: 'Syne', sans-serif; font-size: 14px; color: var(--ink); outline: none; width: 100%; cursor: pointer; }
@@ -55,13 +55,13 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 
 /* ─── SHARED NAV ─── */
 .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 28px 40px; border-bottom: 1px solid var(--border); }
-.nav-brand { font-size: 12px; font-weight: 700; letter-spacing: 0.22em; color: var(--ink); display: flex; align-items: center; gap: 9px; }
+.nav-brand { font-size: 13px; font-weight: 700; letter-spacing: 0.22em; color: var(--ink); display: flex; align-items: center; gap: 9px; }
 .nav-brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
 .nav-right { display: flex; align-items: center; gap: 12px; }
-.nav-badge { font-family: var(--mono); font-size: 10px; padding: 4px 10px; border-radius: 100px; letter-spacing: 0.06em; }
+.nav-badge { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 100px; letter-spacing: 0.06em; }
 .nav-badge.admin { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
 .nav-badge.klient { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(125,200,50,0.25); }
-.nav-logout { font-family: var(--mono); font-size: 11px; color: var(--ink3); background: none; border: none; cursor: pointer; transition: color 0.15s; padding: 0; }
+.nav-logout { font-family: var(--mono); font-size: 12px; color: var(--ink3); background: none; border: none; cursor: pointer; transition: color 0.15s; padding: 0; }
 .nav-logout:hover { color: var(--ink2); }
 
 /* ─── PAGE WRAP ─── */
@@ -71,7 +71,7 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .page-header { padding: 40px 0 28px; border-bottom: 1px solid var(--border); margin-bottom: 48px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .page-header h1 { font-size: clamp(26px, 4vw, 38px); font-weight: 300; letter-spacing: -0.02em; line-height: 1.1; }
 .page-header h1 strong { font-weight: 600; }
-.page-eyebrow { font-family: var(--mono); font-size: 10px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
 
 /* ─── BUTTONS ─── */
 .btn { padding: 10px 20px; border-radius: 7px; font-size: 13px; font-weight: 500; font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border-strong); background: var(--surface2); color: var(--ink2); }
@@ -84,15 +84,15 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* ─── SECTION LABEL ─── */
-.sec-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+.sec-label { font-family: var(--mono); font-size: 11px; color: var(--ink3); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
 .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 /* ─── KLIENT CARDS (admin dashboard) ─── */
 .klient-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 32px; }
 .klient-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.15s; }
 .klient-card:hover { border-color: var(--gold-border); background: var(--surface2); }
-.klient-card-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
-.klient-card-desc { font-size: 13px; color: var(--ink2); margin-bottom: 14px; line-height: 1.5; }
+.klient-card-name { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.klient-card-desc { font-size: 14px; color: var(--ink2); margin-bottom: 14px; line-height: 1.5; }
 .klient-card-icons { display: flex; gap: 8px; }
 .status-icon { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-strong); background: var(--surface3); transition: all 0.15s; }
 .status-icon svg { width: 15px; height: 15px; }
@@ -120,8 +120,8 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .ptile-icon.green-bg { background: var(--accent-dim); }
 .ptile-icon.gray-bg { background: var(--surface3); }
 .ptile-icon svg { width: 18px; height: 18px; }
-.ptile-name { font-size: 15px; font-weight: 500; color: var(--ink); }
-.ptile-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+.ptile-name { font-size: 16px; font-weight: 500; color: var(--ink); }
+.ptile-desc { font-size: 13px; color: var(--ink2); line-height: 1.5; }
 .ptile-status { font-family: var(--mono); font-size: 10px; margin-top: auto; padding-top: 4px; }
 .ptile-status.done { color: var(--accent); }
 .ptile-status.partial { color: var(--gold); }
@@ -129,17 +129,17 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 
 /* ─── BACK NAV ─── */
 .back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; padding-top: 36px; }
-.back-btn { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; color: var(--ink3); background: none; border: none; cursor: pointer; padding: 0; transition: color 0.15s; }
+.back-btn { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 12px; color: var(--ink3); background: none; border: none; cursor: pointer; padding: 0; transition: color 0.15s; }
 .back-btn:hover { color: var(--ink2); }
-.breadcrumb-sep { font-family: var(--mono); font-size: 11px; color: var(--ink3); }
-.breadcrumb-current { font-family: var(--mono); font-size: 11px; color: var(--gold); }
+.breadcrumb-sep { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
+.breadcrumb-current { font-family: var(--mono); font-size: 12px; color: var(--gold); }
 
 /* ─── SAVE INDICATOR ─── */
 .save-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
 .save-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink3); flex-shrink: 0; }
 .save-dot.saving { background: #EAB308; animation: pulse 0.8s infinite; }
 .save-dot.saved { background: var(--accent); }
-.save-txt { font-family: var(--mono); font-size: 11px; color: var(--ink3); }
+.save-txt { font-family: var(--mono); font-size: 12px; color: var(--ink3); }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
 
 /* ─── CHECKLIST ─── */
@@ -149,7 +149,7 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .seg-pill:hover { color: var(--ink); }
 .seg-pill.active { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 600; }
 .progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-.progress-counter { font-family: var(--mono); font-size: 12px; color: var(--ink2); white-space: nowrap; }
+.progress-counter { font-family: var(--mono); font-size: 13px; color: var(--ink2); white-space: nowrap; }
 .progress-track { flex: 1; height: 1px; background: var(--border-strong); position: relative; }
 .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--gold); transition: width 0.4s; width: 0%; }
 .cl-section { margin-bottom: 28px; }
@@ -157,7 +157,7 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .cl-section.seg-sec.visible { display: block; }
 .cl-sec-label { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
 .cl-sec-num { font-family: var(--mono); font-size: 12px; color: var(--ink3); min-width: 22px; }
-.cl-sec-title { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.cl-sec-title { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
 .cl-sec-badge { font-family: var(--mono); font-size: 10px; padding: 2px 7px; border-radius: 100px; background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
 .cl-sec-line { flex: 1; height: 1px; background: var(--border); }
 .cl-sec-tally { font-family: var(--mono); font-size: 11px; color: var(--ink3); white-space: nowrap; }
@@ -169,14 +169,14 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .card.checked .checkbox { background: var(--gold); border-color: var(--gold); }
 .checkbox svg { display: none; }
 .card.checked .checkbox svg { display: block; }
-.card-title { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.4; margin-bottom: 3px; transition: color 0.15s; }
+.card-title { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.4; margin-bottom: 3px; transition: color 0.15s; }
 .card.checked .card-title { color: var(--gold); }
-.card-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+.card-desc { font-size: 13px; color: var(--ink2); line-height: 1.55; }
 .card-note { display: none; margin-top: 10px; width: 100%; background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 6px; padding: 9px 12px; font-family: 'Syne', sans-serif; font-size: 13px; color: var(--ink); resize: vertical; min-height: 38px; outline: none; transition: border-color 0.15s; line-height: 1.6; }
 .card.checked .card-note { display: block; }
 .card-note:focus { border-color: var(--gold); }
 .card-note::placeholder { color: var(--ink3); }
-.tag { display: inline-block; background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 4px; padding: 1px 6px; font-family: var(--mono); font-size: 11px; color: var(--ink2); margin: 2px 2px 2px 0; }
+.tag { display: inline-block; background: var(--surface3); border: 1px solid var(--border-strong); border-radius: 4px; padding: 2px 7px; font-family: var(--mono); font-size: 12px; color: var(--ink2); margin: 2px 2px 2px 0; }
 .global-notes { margin: 20px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
 .global-notes-hdr { padding: 10px 16px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 10px; color: var(--ink2); letter-spacing: 0.08em; text-transform: uppercase; }
 .global-notes textarea { width: 100%; border: none; background: transparent; padding: 14px 16px; font-family: 'Syne', sans-serif; font-size: 14px; color: var(--ink); resize: vertical; min-height: 80px; outline: none; line-height: 1.7; }
@@ -185,7 +185,7 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 /* ─── KALKULACE ─── */
 .kalk-cat { margin-bottom: 28px; }
 .kalk-cat-label { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.kalk-cat-title { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.kalk-cat-title { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--ink2); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
 .kalk-cat-line { flex: 1; height: 1px; background: var(--border); }
 .kalk-items { display: flex; flex-direction: column; gap: 5px; }
 .kalk-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 13px 18px; cursor: pointer; transition: all 0.15s; display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center; }
@@ -196,14 +196,14 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .kalk-item.selected .checkbox svg { display: block; }
 .kalk-item .checkbox svg { display: none; }
 .kalk-item.selected .kalk-item-name { color: var(--gold); }
-.kalk-item-name { font-size: 14px; font-weight: 500; color: var(--ink); transition: color 0.15s; }
+.kalk-item-name { font-size: 15px; font-weight: 500; color: var(--ink); transition: color 0.15s; }
 .kalk-item.selected .kalk-item-name { color: var(--gold); }
-.kalk-item-desc { font-size: 12px; color: var(--ink2); margin-top: 2px; }
-.kalk-item-price { font-family: var(--mono); font-size: 11px; color: var(--ink3); text-align: right; white-space: nowrap; }
+.kalk-item-desc { font-size: 13px; color: var(--ink2); margin-top: 3px; }
+.kalk-item-price { font-family: var(--mono); font-size: 12px; color: var(--ink3); text-align: right; white-space: nowrap; }
 .kalk-item.selected .kalk-item-price { color: var(--gold); }
 .kalk-total-bar { background: var(--surface); border: 1px solid var(--gold-border); border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; margin: 20px 0; flex-wrap: wrap; gap: 10px; }
 .kalk-total-label { font-family: var(--mono); font-size: 10px; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
-.kalk-total-val { font-size: 26px; font-weight: 600; color: var(--gold); }
+.kalk-total-val { font-size: 28px; font-weight: 600; color: var(--gold); }
 .kalk-total-hours { font-family: var(--mono); font-size: 11px; color: var(--ink3); margin-top: 4px; }
 .kalk-note-txt { font-size: 12px; color: var(--ink3); line-height: 1.7; margin-bottom: 16px; }
 
@@ -214,7 +214,7 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .soubor-left { display: flex; align-items: center; gap: 12px; }
 .soubor-ico { width: 34px; height: 34px; background: var(--gold-dim); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .soubor-ico svg { width: 15px; height: 15px; stroke: var(--gold); }
-.soubor-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.soubor-name { font-size: 15px; font-weight: 500; color: var(--ink); }
 .soubor-type { font-family: var(--mono); font-size: 10px; color: var(--ink3); margin-top: 2px; }
 .soubor-link { font-family: var(--mono); font-size: 11px; color: var(--gold); background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: 5px; padding: 6px 12px; cursor: pointer; text-decoration: none; transition: all 0.15s; white-space: nowrap; }
 .soubor-link:hover { background: rgba(181,160,98,0.22); }
@@ -659,6 +659,61 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       <p style="font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:16px;">Bez DPH. Cena nezahrnuje tisk, média, domény a hosting. Finální nabídku upřesníme po konzultaci.</p>
     </div>
 
+    <!-- Retainer sekce -->
+    <div id="kk-retainer" style="margin:32px 0 24px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink2);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;">Průběžná spolupráce</span>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;">
+          <div>
+            <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:6px;">Ad hoc spolupráce na hodinové bázi</div>
+            <div style="font-size:13px;color:var(--ink2);line-height:1.7;">
+              Po dokončení projektu zůstáváme k dispozici pro průběžné úpravy a servis. Zahrnuje objednávky tiskovin a komunikaci s tiskárnou, úpravy webu a grafických materiálů, drobné grafické práce a konzultace, správu sociálních sítí nebo reklam na vyžádání. Pracujeme na hodinové sazbě bez závazku minimálního odběru.
+            </div>
+            <div id="kk-retainer-admin-wrap" style="display:none;margin-top:14px;">
+              <label class="form-label" style="margin-bottom:6px;display:block;">Hodinová sazba pro průběžnou spolupráci (Kč/hod)</label>
+              <input class="form-input" type="number" id="kk-retainer-rate" value="1500" min="0" style="width:180px;padding:8px 12px;font-size:14px;" oninput="kkUpdateRetainer()">
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div style="font-family:var(--mono);font-size:11px;color:var(--ink3);margin-bottom:4px;">Hodinová sazba</div>
+            <div style="font-size:22px;font-weight:600;color:var(--gold);" id="kk-retainer-price">1 500 Kč / hod</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Retainer sekce -->
+    <div id="kk-retainer" style="margin:32px 0 24px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <span style="font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink2);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;">Průběžná spolupráce</span>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+          <div style="flex:1;">
+            <div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:8px;">Po dokončení projektu</div>
+            <div style="font-size:13px;color:var(--ink2);line-height:1.7;">Jakmile projekt stojí, neznamená to konec spolupráce. Pracujeme dál na hodinové bázi — objednávky tiskovin, grafické úpravy, komunikace s tiskárnou, aktualizace webu nebo čehokoliv dalšího co potřebujete. Bez nové smlouvy, bez zbytečné administrativy.</div>
+          </div>
+          <div id="kk-retainer-sazba" style="background:var(--surface3);border:1px solid var(--gold-border);border-radius:10px;padding:14px 20px;text-align:center;flex-shrink:0;">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Hodinová sazba</div>
+            <div style="font-size:22px;font-weight:600;color:var(--gold);" id="kk-retainer-price">1 500 Kč</div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);margin-top:3px;">bez DPH / hod</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--surface3);border:1px solid var(--border-strong);border-radius:4px;padding:3px 8px;">grafické úpravy</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--surface3);border:1px solid var(--border-strong);border-radius:4px;padding:3px 8px;">tisk a tiskoviny</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--surface3);border:1px solid var(--border-strong);border-radius:4px;padding:3px 8px;">aktualizace webu</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--surface3);border:1px solid var(--border-strong);border-radius:4px;padding:3px 8px;">social media</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--surface3);border:1px solid var(--border-strong);border-radius:4px;padding:3px 8px;">konzultace</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--surface3);border:1px solid var(--border-strong);border-radius:4px;padding:3px 8px;">a cokoliv dalšího</span>
+        </div>
+      </div>
+    </div>
+
     <button class="btn btn-gold" onclick="kkSaveManual()">
       <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12V5l5-3 5 3v7H9V9H5v3H2z"/></svg>
       Uložit kalkulaci
@@ -1075,7 +1130,13 @@ const KK_CATALOG = [
   ]},
 ];
 
-function kkRateMin() { return parseInt(document.getElementById('kk-rate-min')?.value) || 1200; }
+function kkRateMin() { return parseInt(document.getElementById('kk-rate-min')?.value) || 1500; }
+function kkUpdateRetainer() {
+  const rate = parseInt(document.getElementById('kk-retainer-rate')?.value) || 1500;
+  const el = document.getElementById('kk-retainer-price');
+  if (el) el.textContent = rate.toLocaleString('cs-CZ') + ' Kč / hod';
+  kkScheduleSave();
+}
 function kkRateMax() { return parseInt(document.getElementById('kk-rate-max')?.value) || 2000; }
 
 function kkRenderCatalog(kalData) {
@@ -1117,7 +1178,11 @@ function kkRenderCatalog(kalData) {
         </div>`;
       } else {
         if (!isVisible) return;
-        const price = `${(hmin * kkRateMin()).toLocaleString('cs-CZ')} – ${(hmax * kkRateMax()).toLocaleString('cs-CZ')} Kč`;
+        const priceMin = Math.round(hmin * kkRateMin());
+        const priceMax = Math.round(hmax * kkRateMax());
+        const price = priceMin === priceMax
+          ? priceMin.toLocaleString('cs-CZ') + ' Kč'
+          : priceMin.toLocaleString('cs-CZ') + ' – ' + priceMax.toLocaleString('cs-CZ') + ' Kč';
         itemsHtml += `<div class="kalk-item${isSelected ? ' selected' : ''}" data-id="${item.id}" data-hmin="${hmin}" data-hmax="${hmax}" onclick="kkToggle(this)">
           <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div><div class="kalk-item-name">${item.name}</div><div class="kalk-item-desc">${item.desc}</div></div>
@@ -1182,17 +1247,19 @@ function kkUpdateAll() {
       catHMax += parseInt(i.dataset.hmax) || 0;
     });
     totalHMin += catHMin; totalHMax += catHMax;
-    const catPriceMin = (catHMin * rMin).toLocaleString('cs-CZ');
-    const catPriceMax = (catHMax * rMax).toLocaleString('cs-CZ');
+    const catPriceMin = Math.round(catHMin * rMin).toLocaleString('cs-CZ');
+    const catPriceMax = Math.round(catHMax * rMax).toLocaleString('cs-CZ');
     const catName = catDiv.dataset.cat;
     if (catTotalEl && catPriceEl) {
       catTotalEl.style.display = 'flex';
-      catPriceEl.textContent = `${catPriceMin} – ${catPriceMax} Kč`;
+      catPriceEl.textContent = catPriceMin === catPriceMax
+          ? `${catPriceMin} Kč`
+          : `${catPriceMin} – ${catPriceMax} Kč`;
     }
     if (summaryRows) {
       summaryRows.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;">
         <span style="font-size:13px;color:var(--ink2);">${catName}</span>
-        <span style="font-family:var(--mono);font-size:12px;color:var(--gold);white-space:nowrap;">${catPriceMin} – ${catPriceMax} Kč</span>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--gold);white-space:nowrap;">${catPriceMin === catPriceMax ? catPriceMin + ' Kč' : catPriceMin + ' – ' + catPriceMax + ' Kč'}</span>
       </div>`;
       hasSummary = true;
     }
@@ -1202,8 +1269,12 @@ function kkUpdateAll() {
   if (summaryWrap) summaryWrap.style.display = hasSummary ? 'block' : 'none';
   const totalVal = document.getElementById('kk-total-val');
   const totalHours = document.getElementById('kk-total-hours');
-  if (totalVal) totalVal.textContent = hasSummary ? `${(totalHMin * rMin).toLocaleString('cs-CZ')} – ${(totalHMax * rMax).toLocaleString('cs-CZ')} Kč` : '—';
-  if (totalHours && isAdmin) totalHours.textContent = hasSummary ? `${totalHMin}–${totalHMax} hod · sazba ${rMin.toLocaleString('cs-CZ')}–${rMax.toLocaleString('cs-CZ')} Kč/hod` : '';
+  const totalMin = Math.round(totalHMin * rMin).toLocaleString('cs-CZ');
+  const totalMax = Math.round(totalHMax * rMax).toLocaleString('cs-CZ');
+  if (totalVal) totalVal.textContent = hasSummary ? (totalMin === totalMax ? totalMin + ' Kč' : totalMin + ' – ' + totalMax + ' Kč') : '—';
+  if (totalHours && isAdmin) totalHours.textContent = hasSummary ? `${totalHMin}–${totalHMax} hod · ${rMin.toLocaleString('cs-CZ')} Kč/hod` : '';
+  const retainerPrice = document.getElementById('kk-retainer-price');
+  if (retainerPrice) retainerPrice.textContent = rMin.toLocaleString('cs-CZ') + ' Kč';
   else if (totalHours) totalHours.textContent = '';
 }
 
@@ -1217,6 +1288,12 @@ async function loadKalkulace() {
 
   if (isAdmin && kalData._rateMin) document.getElementById('kk-rate-min').value = kalData._rateMin;
   if (isAdmin && kalData._rateMax) document.getElementById('kk-rate-max').value = kalData._rateMax;
+  const retainerAdminWrap = document.getElementById('kk-retainer-admin-wrap');
+  if (retainerAdminWrap) retainerAdminWrap.style.display = isAdmin ? 'block' : 'none';
+  const retainerRate = kalData._retainerRate || 1500;
+  const retainerInput = document.getElementById('kk-retainer-rate');
+  if (retainerInput) retainerInput.value = retainerRate;
+  kkUpdateRetainer();
 
   const title = document.getElementById('kk-title');
   if (title) title.textContent = isAdmin ? 'Nastavte ceník pro klienta' : 'Zaškrtněte co potřebujete';
@@ -1238,7 +1315,9 @@ function kkScheduleSave() {
 
 async function kkDoSave(manual) {
   if (!currentSchuzkaId) return;
-  const kalkulace = { _rateMin: kkRateMin(), _rateMax: kkRateMax() };
+  const rate = kkRateMin();
+  const retainerRate = parseInt(document.getElementById('kk-retainer-rate')?.value) || 1500;
+  const kalkulace = { _rateMin: rate, _rateMax: rate, _retainerRate: retainerRate };
   document.querySelectorAll('#kk-cats .kalk-item').forEach(item => {
     const visibleCb = item.querySelector('input[type="checkbox"]');
     kalkulace[item.dataset.id] = {
