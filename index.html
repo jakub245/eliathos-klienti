@@ -646,14 +646,17 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
     <div id="kk-cats"></div>
 
     <!-- Souhrn -->
-    <div id="kk-summary" style="display:none;margin-top:12px;">
-      <div id="kk-summary-rows" style="display:flex;flex-direction:column;gap:5px;margin-bottom:16px;"></div>
-      <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:8px;">
-        <div style="font-size:12px;font-weight:500;color:var(--ink3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;">Celková orientační cena</div>
-        <div style="font-size:36px;font-weight:600;color:var(--gold);line-height:1;" id="kk-total-val">—</div>
-        <div style="font-size:13px;color:var(--ink3);margin-top:6px;" id="kk-total-hours"></div>
+    <div id="kk-summary" style="display:none;">
+      <div style="background:var(--surface);border:1px solid var(--gold-border);border-radius:12px;padding:20px 24px;margin:20px 0;">
+        <div style="font-size:12px;font-weight:500;color:var(--ink3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:14px;">Souhrn</div>
+        <div id="kk-summary-rows" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+        <div style="border-top:1px solid var(--border);padding-top:16px;">
+          <div style="font-size:12px;font-weight:500;color:var(--ink3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;">Celková orientační cena</div>
+          <div style="font-size:36px;font-weight:600;color:var(--gold);line-height:1;" id="kk-total-val">—</div>
+          <div style="font-size:13px;color:var(--ink3);margin-top:6px;" id="kk-total-hours"></div>
+        </div>
       </div>
-      <p style="font-size:14px;color:var(--ink3);line-height:1.7;margin-top:16px;margin-bottom:16px;">Bez DPH. Cena nezahrnuje tisk, média, domény a hosting. Finální nabídku upřesníme po konzultaci.</p>
+      <p style="font-size:14px;color:var(--ink3);line-height:1.7;margin-bottom:16px;">Bez DPH. Cena nezahrnuje tisk, média, domény a hosting. Finální nabídku upřesníme po konzultaci.</p>
     </div>
 
     <!-- Retainer sekce -->
@@ -1259,7 +1262,7 @@ function kkUpdateAll() {
           : `${catPriceMin} – ${catPriceMax} Kč`;
     }
     if (summaryRows) {
-      summaryRows.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
+      summaryRows.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;">
         <span style="font-size:16px;font-weight:500;color:var(--ink2);">${catName}</span>
         <span style="font-size:17px;font-weight:600;color:var(--gold);white-space:nowrap;">${catPriceMin === catPriceMax ? catPriceMin + ' Kč' : catPriceMin + ' – ' + catPriceMax + ' Kč'}</span>
       </div>`;
