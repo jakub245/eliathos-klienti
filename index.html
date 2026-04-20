@@ -383,6 +383,11 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       <div class="page-eyebrow" id="portal-eyebrow">Váš prostor</div>
       <div class="portal-client-name" id="portal-name">—</div>
       <div class="portal-client-desc" id="portal-desc">—</div>
+      <div id="portal-price-bar" style="display:none;margin-top:20px;padding:16px 20px;background:var(--surface);border:1px solid var(--gold-border);border-radius:12px;display:none;">
+        <div style="font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">Orientační cena projektu</div>
+        <div style="font-size:28px;font-weight:600;color:var(--gold);line-height:1;" id="portal-price-val">—</div>
+        <div style="font-size:13px;color:var(--ink3);margin-top:4px;" id="portal-price-note"></div>
+      </div>
     </div>
     <div class="sec-label">Sekce</div>
     <div class="portal-tiles">
@@ -860,19 +865,16 @@ async function loadAdminDashboard() {
     card.innerHTML = `
       <div class="klient-card-name">${k.jmeno}</div>
       ${k.popis ? '<div class="klient-card-desc">' + k.popis + '</div>' : '<div style="height:4px;"></div>'}
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
-        <div class="klient-card-icons">
-          <div class="status-icon ${dqClass}" title="Dotazník">
-            <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5H3.5a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1V5.5L8 1.5z"/><path d="M8 1.5V5.5h4"/><path d="M5 8.5h5M5 11h3"/></svg>
-          </div>
-          <div class="status-icon ${kkClass}" title="Kalkulace">
-            <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="11" height="11" rx="1.5"/><path d="M5 5h2M5 7.5h5M5 10h4"/></svg>
-          </div>
-          <div class="status-icon ${sfClass}" title="Soubory">
-            <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h7a1 1 0 001-1V5L8.5 1.5z"/><path d="M8.5 1.5V5H12"/></svg>
-          </div>
+      <div class="klient-card-icons">
+        <div class="status-icon ${dqClass}" title="Dotazník">
+          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5H3.5a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1V5.5L8 1.5z"/><path d="M8 1.5V5.5h4"/><path d="M5 8.5h5M5 11h3"/></svg>
         </div>
-        ${kalPrice ? '<div style="font-size:13px;font-weight:600;color:var(--gold);">' + kalPrice + '</div>' : ''}
+        <div class="status-icon ${kkClass}" title="Kalkulace">
+          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="11" height="11" rx="1.5"/><path d="M5 5h2M5 7.5h5M5 10h4"/></svg>
+        </div>
+        <div class="status-icon ${sfClass}" title="Soubory">
+          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h7a1 1 0 001-1V5L8.5 1.5z"/><path d="M8.5 1.5V5H12"/></svg>
+        </div>
       </div>
       <div class="klient-card-copy">
         ${k.slug ? '<span class="klient-slug-badge">/' + k.slug + '</span>' : '<span class="klient-slug-badge" style="color:var(--ink3);">bez slug</span>'}
@@ -927,7 +929,7 @@ async function loadPortal(fromAdmin) {
     const kal = s.kalkulace || {};
     const clChecked = Object.values(cl).filter(v => v.checked).length;
     const clTotal = Object.keys(cl).length;
-    const kkCount = Object.values(kal).filter(Boolean).length;
+    const kkCount = Object.entries(kal).filter(([k,v]) => !k.startsWith('_') && v?.selected).length;
 
     const dqEl = document.getElementById('tile-dq-status');
     if (clTotal > 0) {
@@ -949,6 +951,28 @@ async function loadPortal(fromAdmin) {
   const sfEl = document.getElementById('tile-sf-status');
   sfEl.textContent = soubory.length > 0 ? soubory.length + ' souborů' : 'Žádné soubory';
   sfEl.className = 'ptile-status ' + (soubory.length > 0 ? 'done' : 'empty');
+
+  // Zobrazit cenu v detailu portálu
+  const priceBar = document.getElementById('portal-price-bar');
+  const priceVal = document.getElementById('portal-price-val');
+  const priceNote = document.getElementById('portal-price-note');
+  if (priceBar && priceVal && currentSchuzkaId) {
+    const { data: ps } = await sb.from('schuzky').select('kalkulace').eq('id', currentSchuzkaId).single();
+    const kal = ps?.kalkulace || {};
+    const rate = kal._rateMin || 1500;
+    const items = Object.entries(kal).filter(([k,v]) => !k.startsWith('_') && v?.selected);
+    if (items.length > 0) {
+      let hMin = 0, hMax = 0;
+      items.forEach(([,v]) => { hMin += v.hmin || 0; hMax += v.hmax || 0; });
+      const pMin = Math.round(hMin * rate).toLocaleString('cs-CZ');
+      const pMax = Math.round(hMax * rate).toLocaleString('cs-CZ');
+      priceVal.textContent = pMin === pMax ? pMin + ' Kč' : pMin + ' – ' + pMax + ' Kč';
+      priceNote.textContent = hMin + '–' + hMax + ' hod · ' + rate.toLocaleString('cs-CZ') + ' Kč/hod';
+      priceBar.style.display = 'block';
+    } else {
+      priceBar.style.display = 'none';
+    }
+  }
 
   showView('portal');
 }
