@@ -195,6 +195,7 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 .kalk-item.selected .checkbox { background: var(--gold); border-color: var(--gold); }
 .kalk-item.selected .checkbox svg { display: block; }
 .kalk-item .checkbox svg { display: none; }
+.kalk-item.selected .kalk-item-name { color: var(--gold); }
 .kalk-item-name { font-size: 14px; font-weight: 500; color: var(--ink); transition: color 0.15s; }
 .kalk-item.selected .kalk-item-name { color: var(--gold); }
 .kalk-item-desc { font-size: 12px; color: var(--ink2); margin-top: 2px; }
@@ -619,51 +620,45 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
         <div class="save-bar" style="margin:0;"><div class="save-dot" id="kk-dot"></div><span class="save-txt" id="kk-txt">Automatické ukládání</span></div>
       </div>
     </div>
-    <div style="margin-bottom:20px;">
+    <div style="margin-bottom:24px;">
       <div class="page-eyebrow">Orientační kalkulace</div>
-      <h1 style="font-size:26px;font-weight:300;letter-spacing:-0.01em;">Zaškrtněte co potřebujete</h1>
+      <h1 style="font-size:26px;font-weight:300;letter-spacing:-0.01em;" id="kk-title">Zaškrtněte co potřebujete</h1>
     </div>
 
-    <div class="kalk-cat">
-      <div class="kalk-cat-label"><span class="kalk-cat-title">Vizuální identita</span><div class="kalk-cat-line"></div></div>
-      <div class="kalk-items">
-        <div class="kalk-item" data-id="k-logo" data-hmin="8" data-hmax="20" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Logo</div><div class="kalk-item-desc">Primární značka, varianty, formáty</div></div><div class="kalk-item-price">8–20 hod</div></div>
-        <div class="kalk-item" data-id="k-brand" data-hmin="16" data-hmax="28" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Brand manuál</div><div class="kalk-item-desc">Barvy, písma, pravidla použití</div></div><div class="kalk-item-price">16–28 hod</div></div>
-        <div class="kalk-item" data-id="k-vizitky" data-hmin="4" data-hmax="8" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Vizitky</div><div class="kalk-item-desc">Návrh a podklady pro tisk</div></div><div class="kalk-item-price">4–8 hod</div></div>
-        <div class="kalk-item" data-id="k-tiskoviny" data-hmin="6" data-hmax="12" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Firemní tiskoviny</div><div class="kalk-item-desc">Hlavičkový papír, obálky, šablony</div></div><div class="kalk-item-price">6–12 hod</div></div>
-        <div class="kalk-item" data-id="k-podpis" data-hmin="2" data-hmax="4" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Emailový podpis</div><div class="kalk-item-desc">HTML podpis do emailového klienta</div></div><div class="kalk-item-price">2–4 hod</div></div>
-      </div>
-    </div>
-    <div class="kalk-cat">
-      <div class="kalk-cat-label"><span class="kalk-cat-title">Web a digitál</span><div class="kalk-cat-line"></div></div>
-      <div class="kalk-items">
-        <div class="kalk-item" data-id="k-webdesign" data-hmin="20" data-hmax="40" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Webdesign (UI/UX)</div><div class="kalk-item-desc">Návrh bez kódování, Figma/prototyp</div></div><div class="kalk-item-price">20–40 hod</div></div>
-        <div class="kalk-item" data-id="k-web" data-hmin="20" data-hmax="40" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Web vývoj</div><div class="kalk-item-desc">Realizace webu, statický nebo CMS</div></div><div class="kalk-item-price">20–40 hod</div></div>
-        <div class="kalk-item" data-id="k-qara" data-hmin="20" data-hmax="40" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Napojení systému (QARA / XML)</div><div class="kalk-item-desc">Integrace realitního nebo externího systému</div></div><div class="kalk-item-price">20–40 hod</div></div>
-        <div class="kalk-item" data-id="k-hypo" data-hmin="8" data-hmax="16" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Hypoteční kalkulačka</div><div class="kalk-item-desc">Interaktivní kalkulátor splátky</div></div><div class="kalk-item-price">8–16 hod</div></div>
-        <div class="kalk-item" data-id="k-social" data-hmin="6" data-hmax="14" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Social media šablony</div><div class="kalk-item-desc">Canva / Figma šablony pro sociální sítě</div></div><div class="kalk-item-price">6–14 hod</div></div>
-      </div>
-    </div>
-    <div class="kalk-cat">
-      <div class="kalk-cat-label"><span class="kalk-cat-title">Marketing a obsah</span><div class="kalk-cat-line"></div></div>
-      <div class="kalk-items">
-        <div class="kalk-item" data-id="k-strategie" data-hmin="8" data-hmax="16" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Marketingová strategie</div><div class="kalk-item-desc">Analýza, cíle, kanály, plán</div></div><div class="kalk-item-price">8–16 hod</div></div>
-        <div class="kalk-item" data-id="k-copy" data-hmin="4" data-hmax="10" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Copywriting</div><div class="kalk-item-desc">Texty webu, reklam, emailů</div></div><div class="kalk-item-price">4–10 hod</div></div>
-        <div class="kalk-item" data-id="k-brozura" data-hmin="8" data-hmax="16" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Brožura / katalog</div><div class="kalk-item-desc">Návrh a podklady pro tisk</div></div><div class="kalk-item-price">8–16 hod</div></div>
-        <div class="kalk-item" data-id="k-ads" data-hmin="6" data-hmax="12" onclick="kkToggle(this)"><div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kalk-item-name">Správa reklam (Meta / Google)</div><div class="kalk-item-desc">Nastavení a správa kampaní</div></div><div class="kalk-item-price">6–12 hod / měs.</div></div>
+    <!-- Admin: sazba -->
+    <div id="kk-admin-sazba" style="display:none;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Hodinová sazba pro tohoto klienta</div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label class="form-label">Sazba od (Kč/hod)</label>
+          <input class="form-input" type="number" id="kk-rate-min" value="1200" min="0" style="width:140px;padding:8px 12px;font-size:14px;" oninput="kkUpdateAll()">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <label class="form-label">Sazba do (Kč/hod)</label>
+          <input class="form-input" type="number" id="kk-rate-max" value="2000" min="0" style="width:140px;padding:8px 12px;font-size:14px;" oninput="kkUpdateAll()">
+        </div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:16px;">Sazba se uloží s kalkulací</div>
       </div>
     </div>
 
-    <div id="kk-total-wrap" style="display:none;">
-      <div class="kalk-total-bar">
-        <div>
-          <div class="kalk-total-label">Orientační cena projektu</div>
-          <div class="kalk-total-val" id="kk-total-val">—</div>
-          <div class="kalk-total-hours" id="kk-total-hours">—</div>
+    <div id="kk-cats"></div>
+
+    <!-- Souhrn -->
+    <div id="kk-summary" style="display:none;">
+      <div style="background:var(--surface);border:1px solid var(--gold-border);border-radius:12px;padding:20px 24px;margin:20px 0;">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Souhrn</div>
+        <div id="kk-summary-rows" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+        <div style="border-top:1px solid var(--border);padding-top:14px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px;">
+          <div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Celková orientační cena</div>
+            <div style="font-size:28px;font-weight:600;color:var(--gold);" id="kk-total-val">—</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:4px;" id="kk-total-hours"></div>
+          </div>
         </div>
       </div>
-      <p class="kalk-note-txt">Bez DPH. Cena nezahrnuje tisk, média, domény a hosting. Finální nabídku upřesníme po konzultaci.</p>
+      <p style="font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:16px;">Bez DPH. Cena nezahrnuje tisk, média, domény a hosting. Finální nabídku upřesníme po konzultaci.</p>
     </div>
+
     <button class="btn btn-gold" onclick="kkSaveManual()">
       <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12V5l5-3 5 3v7H9V9H5v3H2z"/></svg>
       Uložit kalkulaci
@@ -1028,46 +1023,231 @@ async function dqDoSave(manual) {
 function dqSaveManual() { dqDoSave(true); }
 
 // ─── KALKULACE ───
-async function loadKalkulace() {
-  if (!currentSchuzkaId) return;
-  const { data: s } = await sb.from('schuzky').select('kalkulace').eq('id', currentSchuzkaId).single();
-  const kal = s?.kalkulace || {};
-  document.querySelectorAll('#view-kalkulace .kalk-item').forEach(item => {
-    item.classList.toggle('selected', !!kal[item.dataset.id]);
+const KK_CATALOG = [
+  { cat: 'Brand a vizuální identita', items: [
+    { id: 'k-brand-strat', name: 'Brand strategie a positioning', desc: 'Definujeme kdo jste, pro koho to děláte a proč by si zákazník vybral vás. Základ pro vše ostatní.', hmin: 6, hmax: 14 },
+    { id: 'k-logo', name: 'Logo — základní varianta', desc: 'Primární logo ve všech formátech — barevné, černobílé, horizontální, vertikální, favicon.', hmin: 8, hmax: 20 },
+    { id: 'k-logo-sys', name: 'Logo — rozšířený systém', desc: 'Kompletní logo systém s variantami, submarks a ikonami pro různá prostředí.', hmin: 16, hmax: 32 },
+    { id: 'k-brand-man', name: 'Brand manuál (brand book)', desc: 'Dokument jak správně používat vaši značku — barvy, písma, logo, fotografie, tón komunikace.', hmin: 16, hmax: 28 },
+    { id: 'k-barvy', name: 'Barevný systém a typografie', desc: 'Výběr firemních barev a písem s přesnými hodnotami pro tisk i digitál.', hmin: 4, hmax: 8 },
+    { id: 'k-tov', name: 'Tone of voice a messaging', desc: 'Jak vaše firma mluví — tón, texty na webu, v emailech a na sítích.', hmin: 6, hmax: 12 },
+    { id: 'k-sablony-dok', name: 'Šablony firemních dokumentů', desc: 'Nabídky, smlouvy, zprávy v jednotném firemním designu ve Wordu nebo Google Docs.', hmin: 4, hmax: 10 },
+    { id: 'k-podpis', name: 'Emailový podpis', desc: 'Profesionální HTML podpis pro Gmail nebo Outlook ve firemním vizuálu.', hmin: 2, hmax: 4 },
+  ]},
+  { cat: 'Tiskoviny a tiskové materiály', items: [
+    { id: 'k-vizitky', name: 'Vizitky', desc: 'Návrh vizitky v tiskové kvalitě s podklady pro tisk.', hmin: 3, hmax: 6 },
+    { id: 'k-hlavicky', name: 'Hlavičkový papír a obálky', desc: 'Firemní dopis a obálka v jednotném designu. Tiskový podklad i editovatelná šablona.', hmin: 3, hmax: 6 },
+    { id: 'k-letak', name: 'Základní leták (A4 / A5)', desc: 'Reklamní materiál pro distribuci, výstavy nebo provozovnu. Jednostranný nebo oboustranný.', hmin: 4, hmax: 8 },
+    { id: 'k-brozura-firm', name: 'Brožura o společnosti', desc: 'Reprezentativní materiál pro schůzky nebo výstavy. Obvykle 8–16 stran, prémiová kvalita.', hmin: 12, hmax: 24 },
+    { id: 'k-brozura-proj', name: 'Projektová brožura', desc: 'Podrobný materiál ke konkrétnímu projektu, nemovitosti nebo produktu.', hmin: 6, hmax: 14 },
+    { id: 'k-rollup', name: 'Roll-up a bannery', desc: 'Reklamní materiály pro výstavy nebo eventy. Návrh v tiskové kvalitě.', hmin: 3, hmax: 6 },
+    { id: 'k-katalog', name: 'Katalog produktů nebo služeb', desc: 'Větší tiskový materiál prezentující celé portfolio. Pro B2B klienty nebo veletrhy.', hmin: 20, hmax: 40 },
+  ]},
+  { cat: 'Webdesign a digitální prezentace', items: [
+    { id: 'k-ux-audit', name: 'UX audit stávajícího webu', desc: 'Projdeme váš web očima zákazníka. Výstup je zpráva s konkrétními doporučeními.', hmin: 4, hmax: 8 },
+    { id: 'k-webdesign', name: 'Grafický návrh webu (UI/UX design)', desc: 'Jak bude váš web vypadat a fungovat — rozložení, vizuální styl, mobil. Figma prototyp.', hmin: 20, hmax: 50 },
+    { id: 'k-landing', name: 'Landing page (cílová stránka)', desc: 'Jedna stránka zaměřená na jeden cíl — poptávka, prodej, registrace na event.', hmin: 8, hmax: 16 },
+    { id: 'k-web-prez', name: 'Webová prezentace (5–10 stránek)', desc: 'Kompletní firemní web — úvod, o nás, služby, reference, kontakt. Moderní a mobilní.', hmin: 30, hmax: 60 },
+    { id: 'k-web-dev', name: 'Realizace webu (frontend vývoj)', desc: 'Převedeme design do fungujícího webu napojíme na doménu. Rychlé, responzivní, SEO.', hmin: 20, hmax: 50 },
+    { id: 'k-web-komplet', name: 'Kompletní webové řešení', desc: 'Design + vývoj + doména + CMS pro správu obsahu + databáze + analytika.', hmin: 50, hmax: 120 },
+    { id: 'k-eshop', name: 'E-shop', desc: 'Online obchod s katalogem, košíkem, platební bránou a správou objednávek.', hmin: 40, hmax: 100 },
+    { id: 'k-api', name: 'Napojení na systém (CRM / XML / API)', desc: 'Propojíme web s realitním systémem, CRM nebo jiným nástrojem. Data se synchronizují automaticky.', hmin: 20, hmax: 50 },
+    { id: 'k-kalk', name: 'Interaktivní kalkulačka', desc: 'Hypoteční kalkulačka nebo průvodce výběrem. Zákazník dostane orientaci hned na webu.', hmin: 8, hmax: 20 },
+    { id: 'k-social-sab', name: 'Šablony pro sociální sítě', desc: 'Vizuální šablony v Canvě nebo Figmě. Stačí doplnit text a fotku.', hmin: 6, hmax: 14 },
+  ]},
+  { cat: 'Grafické a kreativní služby', items: [
+    { id: 'k-prezentace', name: 'Prezentace (pitch deck / firemní slides)', desc: 'Profesionální slide deck pro investory nebo klienty. PowerPoint nebo Google Slides.', hmin: 6, hmax: 16 },
+    { id: 'k-foto-portrety', name: 'Firemní fotografie — portréty týmu', desc: 'Koordinace focení zaměstnanců pro web a LinkedIn. Postprodukce, webová i tisková kvalita.', hmin: 4, hmax: 8 },
+    { id: 'k-foto-prostory', name: 'Firemní fotografie — prostory a produkty', desc: 'Focení provozovny nebo produktů pro web a marketing.', hmin: 4, hmax: 8 },
+    { id: 'k-video-firm', name: 'Firemní video — představení společnosti', desc: 'Krátké video (60–120 s) pro web nebo sítě. Scénář, natočení, střih, titulky.', hmin: 10, hmax: 24 },
+    { id: 'k-reels', name: 'Produktové video a reels', desc: 'Krátká videa pro Instagram, TikTok nebo YouTube. Střih, grafika, titulky, hudba.', hmin: 4, hmax: 10 },
+    { id: 'k-infografika', name: 'Infografika', desc: 'Složité informace jako přehledný vizuál — data, procesy, srovnání.', hmin: 4, hmax: 10 },
+    { id: 'k-ads-grafika', name: 'Reklamní grafika (Meta / Google Ads)', desc: 'Reklamní vizuály ve správných rozměrech pro kampaně na Facebooku, Instagramu nebo Google.', hmin: 4, hmax: 8 },
+  ]},
+  { cat: 'Marketing, obsah a strategie', items: [
+    { id: 'k-mkt-strat', name: 'Marketingová strategie', desc: 'Analýza trhu, cílová skupina, výběr kanálů a konkrétní plán s prioritami.', hmin: 8, hmax: 20 },
+    { id: 'k-obs-plan', name: 'Obsahový plán a redakční kalendář', desc: 'Plán co, kdy a kde publikovat. Přestanete řešit co dnes dát na Instagram.', hmin: 4, hmax: 8 },
+    { id: 'k-copy', name: 'Copywriting — texty webu', desc: 'Texty které prodávají — homepage, o nás, služby, FAQ.', hmin: 6, hmax: 14 },
+    { id: 'k-social-mgmt', name: 'Správa a tvorba obsahu pro sítě', desc: 'Příspěvky, stories, reels. Témata, texty, grafika, plánování publikace.', hmin: 8, hmax: 20 },
+    { id: 'k-reklamy', name: 'Nastavení a správa reklam (Meta / Google)', desc: 'Kampaně na Facebooku, Instagramu nebo Google. Sledování, optimalizace, reporting.', hmin: 6, hmax: 12 },
+    { id: 'k-email-mkt', name: 'Email marketing (newsletter)', desc: 'Šablona, platforma, obsah. Zákazníci na vás nezapomenou a vracejí se.', hmin: 4, hmax: 10 },
+    { id: 'k-seo', name: 'SEO audit a optimalizace', desc: 'Proč vás zákazníci nenajdou v Googlu a jak to napravit. Klíčová slova, technický audit.', hmin: 6, hmax: 14 },
+  ]},
+];
+
+function kkRateMin() { return parseInt(document.getElementById('kk-rate-min')?.value) || 1200; }
+function kkRateMax() { return parseInt(document.getElementById('kk-rate-max')?.value) || 2000; }
+
+function kkRenderCatalog(kalData) {
+  const container = document.getElementById('kk-cats');
+  container.innerHTML = '';
+  KK_CATALOG.forEach(cat => {
+    const catDiv = document.createElement('div');
+    catDiv.className = 'kalk-cat';
+    catDiv.dataset.cat = cat.cat;
+    let itemsHtml = '';
+    cat.items.forEach(item => {
+      const saved = kalData[item.id] || {};
+      const isSelected = !!saved.selected;
+      const isVisible = saved.visible !== false;
+      const hmin = saved.hmin ?? item.hmin;
+      const hmax = saved.hmax ?? item.hmax;
+
+      if (isAdmin) {
+        itemsHtml += `<div class="kalk-item${isSelected ? ' selected' : ''}" data-id="${item.id}" data-hmin="${hmin}" data-hmax="${hmax}">
+          <div class="checkbox" onclick="kkToggle(this.closest('.kalk-item'))" style="cursor:pointer;">
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div style="flex:1;">
+            <div class="kalk-item-name">${item.name}</div>
+            <div class="kalk-item-desc">${item.desc}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <input type="number" class="form-input" value="${hmin}" min="0" style="width:60px;padding:5px 8px;font-size:12px;text-align:center;" oninput="kkUpdateHours(this,'min')" title="Hodiny od">
+              <span style="font-family:var(--mono);font-size:11px;color:var(--ink3);">–</span>
+              <input type="number" class="form-input" value="${hmax}" min="0" style="width:60px;padding:5px 8px;font-size:12px;text-align:center;" oninput="kkUpdateHours(this,'max')" title="Hodiny do">
+              <span style="font-family:var(--mono);font-size:11px;color:var(--ink3);">hod</span>
+            </div>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--ink3);">
+              <input type="checkbox" ${isVisible ? 'checked' : ''} onchange="kkToggleVisible(this)" style="width:12px;height:12px;accent-color:var(--gold);">
+              zobrazit klientovi
+            </label>
+          </div>
+        </div>`;
+      } else {
+        if (!isVisible) return;
+        const price = `${(hmin * kkRateMin()).toLocaleString('cs-CZ')} – ${(hmax * kkRateMax()).toLocaleString('cs-CZ')} Kč`;
+        itemsHtml += `<div class="kalk-item${isSelected ? ' selected' : ''}" data-id="${item.id}" data-hmin="${hmin}" data-hmax="${hmax}" onclick="kkToggle(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><div class="kalk-item-name">${item.name}</div><div class="kalk-item-desc">${item.desc}</div></div>
+          <div class="kalk-item-price">${price}</div>
+        </div>`;
+      }
+    });
+
+    if (!isAdmin) {
+      const catItems = cat.items.filter(item => {
+        const saved = kalData[item.id] || {};
+        return saved.visible !== false;
+      });
+      if (catItems.length === 0) return;
+    }
+
+    catDiv.innerHTML = `<div class="kalk-cat-label"><span class="kalk-cat-title">${cat.cat}</span><div class="kalk-cat-line"></div></div>
+      <div class="kalk-items">${itemsHtml}</div>
+      <div class="kk-cat-total" style="margin-top:6px;padding:10px 14px;background:var(--surface3);border-radius:7px;display:none;justify-content:space-between;align-items:center;">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--ink3);">${cat.cat}</span>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--gold);font-weight:500;" class="kk-cat-price"></span>
+      </div>`;
+    container.appendChild(catDiv);
   });
-  kkUpdateTotal(); setSave('kk', 'saved');
-  const badge = isAdmin ? 'Admin' : currentKlient.jmeno;
-  const cls = isAdmin ? 'admin' : 'klient';
-  setBadge(['kk-badge'], badge, cls);
-  showView('kalkulace');
+  kkUpdateAll();
 }
 
 function kkToggle(item) {
   item.classList.toggle('selected');
-  kkUpdateTotal(); kkScheduleSave();
+  kkUpdateAll(); kkScheduleSave();
 }
 
-function kkUpdateTotal() {
-  const selected = [...document.querySelectorAll('#view-kalkulace .kalk-item.selected')];
-  const wrap = document.getElementById('kk-total-wrap');
-  if (selected.length === 0) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block';
-  let hMin = 0, hMax = 0;
-  selected.forEach(i => { hMin += parseInt(i.dataset.hmin); hMax += parseInt(i.dataset.hmax); });
-  document.getElementById('kk-total-val').textContent = (hMin * RATE_MIN).toLocaleString('cs-CZ') + ' – ' + (hMax * RATE_MAX).toLocaleString('cs-CZ') + ' Kč';
-  document.getElementById('kk-total-hours').textContent = hMin + '–' + hMax + ' hod · sazba 1 200–2 000 Kč/hod';
+function kkToggleVisible(cb) {
+  kkUpdateAll(); kkScheduleSave();
+}
+
+function kkUpdateHours(input, type) {
+  const item = input.closest('.kalk-item');
+  if (type === 'min') item.dataset.hmin = input.value;
+  else item.dataset.hmax = input.value;
+  kkUpdateAll(); kkScheduleSave();
+}
+
+function kkUpdateAll() {
+  const rMin = kkRateMin(), rMax = kkRateMax();
+  let totalHMin = 0, totalHMax = 0;
+  const summaryRows = document.getElementById('kk-summary-rows');
+  if (summaryRows) summaryRows.innerHTML = '';
+  let hasSummary = false;
+
+  document.querySelectorAll('#kk-cats .kalk-cat').forEach(catDiv => {
+    const selected = [...catDiv.querySelectorAll('.kalk-item.selected')];
+    const catTotalEl = catDiv.querySelector('.kk-cat-total');
+    const catPriceEl = catDiv.querySelector('.kk-cat-price');
+    if (selected.length === 0) {
+      if (catTotalEl) catTotalEl.style.display = 'none';
+      return;
+    }
+    let catHMin = 0, catHMax = 0;
+    selected.forEach(i => {
+      catHMin += parseInt(i.dataset.hmin) || 0;
+      catHMax += parseInt(i.dataset.hmax) || 0;
+    });
+    totalHMin += catHMin; totalHMax += catHMax;
+    const catPriceMin = (catHMin * rMin).toLocaleString('cs-CZ');
+    const catPriceMax = (catHMax * rMax).toLocaleString('cs-CZ');
+    const catName = catDiv.dataset.cat;
+    if (catTotalEl && catPriceEl) {
+      catTotalEl.style.display = 'flex';
+      catPriceEl.textContent = `${catPriceMin} – ${catPriceMax} Kč`;
+    }
+    if (summaryRows) {
+      summaryRows.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:13px;color:var(--ink2);">${catName}</span>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--gold);white-space:nowrap;">${catPriceMin} – ${catPriceMax} Kč</span>
+      </div>`;
+      hasSummary = true;
+    }
+  });
+
+  const summaryWrap = document.getElementById('kk-summary');
+  if (summaryWrap) summaryWrap.style.display = hasSummary ? 'block' : 'none';
+  const totalVal = document.getElementById('kk-total-val');
+  const totalHours = document.getElementById('kk-total-hours');
+  if (totalVal) totalVal.textContent = hasSummary ? `${(totalHMin * rMin).toLocaleString('cs-CZ')} – ${(totalHMax * rMax).toLocaleString('cs-CZ')} Kč` : '—';
+  if (totalHours && isAdmin) totalHours.textContent = hasSummary ? `${totalHMin}–${totalHMax} hod · sazba ${rMin.toLocaleString('cs-CZ')}–${rMax.toLocaleString('cs-CZ')} Kč/hod` : '';
+  else if (totalHours) totalHours.textContent = '';
+}
+
+async function loadKalkulace() {
+  if (!currentSchuzkaId) return;
+  const { data: s } = await sb.from('schuzky').select('kalkulace').eq('id', currentSchuzkaId).single();
+  const kalData = s?.kalkulace || {};
+
+  const adminSazba = document.getElementById('kk-admin-sazba');
+  if (adminSazba) adminSazba.style.display = isAdmin ? 'block' : 'none';
+
+  if (isAdmin && kalData._rateMin) document.getElementById('kk-rate-min').value = kalData._rateMin;
+  if (isAdmin && kalData._rateMax) document.getElementById('kk-rate-max').value = kalData._rateMax;
+
+  const title = document.getElementById('kk-title');
+  if (title) title.textContent = isAdmin ? 'Nastavte ceník pro klienta' : 'Zaškrtněte co potřebujete';
+
+  const badge = isAdmin ? 'Admin' : currentKlient.jmeno;
+  const cls = isAdmin ? 'admin' : 'klient';
+  setBadge(['kk-badge'], badge, cls);
+
+  kkRenderCatalog(kalData);
+  setSave('kk', 'saved');
+  showView('kalkulace');
 }
 
 function kkScheduleSave() {
   setSave('kk', 'saving');
   clearTimeout(kkTimer);
-  kkTimer = setTimeout(() => kkDoSave(false), 1000);
+  kkTimer = setTimeout(() => kkDoSave(false), 1200);
 }
 
 async function kkDoSave(manual) {
   if (!currentSchuzkaId) return;
-  const kalkulace = {};
-  document.querySelectorAll('#view-kalkulace .kalk-item').forEach(i => { kalkulace[i.dataset.id] = i.classList.contains('selected'); });
+  const kalkulace = { _rateMin: kkRateMin(), _rateMax: kkRateMax() };
+  document.querySelectorAll('#kk-cats .kalk-item').forEach(item => {
+    const visibleCb = item.querySelector('input[type="checkbox"]');
+    kalkulace[item.dataset.id] = {
+      selected: item.classList.contains('selected'),
+      hmin: parseInt(item.dataset.hmin) || 0,
+      hmax: parseInt(item.dataset.hmax) || 0,
+      visible: visibleCb ? visibleCb.checked : true,
+    };
+  });
   const { error } = await sb.from('schuzky').update({ kalkulace }).eq('id', currentSchuzkaId);
   if (error) { setSave('kk', ''); if (manual) toast('Chyba uložení', 'error'); }
   else { setSave('kk', 'saved'); if (manual) toast('Kalkulace uložena', 'success'); }
