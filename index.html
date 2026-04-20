@@ -965,7 +965,7 @@ async function loadPortal(fromAdmin) {
       const pMin = Math.round(hMin * rate).toLocaleString('cs-CZ');
       const pMax = Math.round(hMax * rate).toLocaleString('cs-CZ');
       priceVal.textContent = pMin === pMax ? pMin + ' Kč' : pMin + ' – ' + pMax + ' Kč';
-      priceNote.textContent = hMin + '–' + hMax + ' hod · ' + rate.toLocaleString('cs-CZ') + ' Kč/hod';
+      priceNote.textContent = '';
       priceBar.style.display = 'block';
     } else {
       priceBar.style.display = 'none';
@@ -1276,10 +1276,9 @@ function kkUpdateAll() {
   const totalMin = Math.round(totalHMin * rMin).toLocaleString('cs-CZ');
   const totalMax = Math.round(totalHMax * rMax).toLocaleString('cs-CZ');
   if (totalVal) totalVal.textContent = hasSummary ? (totalMin === totalMax ? totalMin + ' Kč' : totalMin + ' – ' + totalMax + ' Kč') : '—';
-  if (totalHours && isAdmin) totalHours.textContent = hasSummary ? `${totalHMin}–${totalHMax} hod · ${rMin.toLocaleString('cs-CZ')} Kč/hod` : '';
+  if (totalHours) totalHours.textContent = '';
   const retainerPrice = document.getElementById('kk-retainer-price');
   if (retainerPrice) retainerPrice.textContent = rMin.toLocaleString('cs-CZ') + ' Kč';
-  else if (totalHours) totalHours.textContent = '';
 }
 
 async function loadKalkulace() {
