@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eliathos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,7 +25,7 @@
   --border: rgba(255,255,255,0.07);
   --border-strong: rgba(255,255,255,0.12);
   --danger: #E05252;
-  --mono: 'Inter', sans-serif;
+  --mono: 'Syne', sans-serif;
 }
 html { font-size: 18px; }
 body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
@@ -1308,7 +1308,11 @@ async function kkDoSave(manual) {
     };
   });
   const { error } = await sb.from('schuzky').update({ kalkulace }).eq('id', currentSchuzkaId);
-  if (error) { setSave('kk', ''); if (manual) toast('Chyba uložení', 'error'); }
+  if (error) { 
+    console.error('Kalkulace save error:', error); 
+    setSave('kk', ''); 
+    if (manual) toast('Chyba: ' + error.message, 'error'); 
+  }
   else { setSave('kk', 'saved'); if (manual) toast('Kalkulace uložena', 'success'); }
 }
 function kkSaveManual() { kkDoSave(true); }
