@@ -627,17 +627,14 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
 
     <!-- Admin: sazba -->
     <div id="kk-admin-sazba" style="display:none;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
-      <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Hodinová sazba pro tohoto klienta</div>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-        <div style="display:flex;flex-direction:column;gap:5px;">
-          <label class="form-label">Sazba od (Kč/hod)</label>
-          <input class="form-input" type="number" id="kk-rate-min" value="1200" min="0" style="width:140px;padding:8px 12px;font-size:14px;" oninput="kkUpdateAll()">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:12px;">Hodinová sazba pro tohoto klienta</div>
+      <div style="display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label class="form-label">Sazba (Kč/hod)</label>
+          <input class="form-input" type="number" id="kk-rate-min" value="1500" min="0" style="width:180px;padding:10px 14px;font-size:16px;" oninput="document.getElementById('kk-rate-max').value=this.value;kkUpdateAll()">
+          <input type="hidden" id="kk-rate-max" value="1500">
         </div>
-        <div style="display:flex;flex-direction:column;gap:5px;">
-          <label class="form-label">Sazba do (Kč/hod)</label>
-          <input class="form-input" type="number" id="kk-rate-max" value="2000" min="0" style="width:140px;padding:8px 12px;font-size:14px;" oninput="kkUpdateAll()">
-        </div>
-        <div style="font-size:12px;color:var(--ink3);margin-top:16px;">Sazba se uloží s kalkulací</div>
+        <div style="font-size:13px;color:var(--ink3);padding-bottom:10px;">Uloží se s kalkulací. Zobrazí se i jako sazba průběžné spolupráce.</div>
       </div>
     </div>
 
@@ -839,7 +836,16 @@ async function loadAdminDashboard() {
     const soubory = k.soubory || [];
     const clChecked = Object.values(cl).filter(v => v.checked).length;
     const clTotal = Object.keys(cl).length;
-    const kkCount = Object.values(kal).filter(Boolean).length;
+    const kkItems = Object.entries(kal).filter(([k,v]) => k !== '_rateMin' && k !== '_rateMax' && k !== '_retainerRate' && v?.selected);
+    const kkCount = kkItems.length;
+    const kkRate = kal._rateMin || 1500;
+    let kkHMin = 0, kkHMax = 0;
+    kkItems.forEach(([k,v]) => { kkHMin += v.hmin || 0; kkHMax += v.hmax || 0; });
+    const kalPrice = kkCount > 0
+      ? (kkHMin === kkHMax
+        ? Math.round(kkHMin * kkRate).toLocaleString('cs-CZ') + ' Kč'
+        : Math.round(kkHMin * kkRate).toLocaleString('cs-CZ') + ' – ' + Math.round(kkHMax * kkRate).toLocaleString('cs-CZ') + ' Kč')
+      : null;
 
     const dqClass = clTotal > 0 ? (clChecked === clTotal ? 'green-filled' : 'filled') : 'empty';
     const kkClass = kkCount > 0 ? 'filled' : 'empty';
@@ -854,16 +860,19 @@ async function loadAdminDashboard() {
     card.innerHTML = `
       <div class="klient-card-name">${k.jmeno}</div>
       ${k.popis ? '<div class="klient-card-desc">' + k.popis + '</div>' : '<div style="height:4px;"></div>'}
-      <div class="klient-card-icons">
-        <div class="status-icon ${dqClass}" title="Dotazník">
-          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5H3.5a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1V5.5L8 1.5z"/><path d="M8 1.5V5.5h4"/><path d="M5 8.5h5M5 11h3"/></svg>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+        <div class="klient-card-icons">
+          <div class="status-icon ${dqClass}" title="Dotazník">
+            <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5H3.5a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1V5.5L8 1.5z"/><path d="M8 1.5V5.5h4"/><path d="M5 8.5h5M5 11h3"/></svg>
+          </div>
+          <div class="status-icon ${kkClass}" title="Kalkulace">
+            <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="11" height="11" rx="1.5"/><path d="M5 5h2M5 7.5h5M5 10h4"/></svg>
+          </div>
+          <div class="status-icon ${sfClass}" title="Soubory">
+            <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h7a1 1 0 001-1V5L8.5 1.5z"/><path d="M8.5 1.5V5H12"/></svg>
+          </div>
         </div>
-        <div class="status-icon ${kkClass}" title="Kalkulace">
-          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="11" height="11" rx="1.5"/><path d="M5 5h2M5 7.5h5M5 10h4"/></svg>
-        </div>
-        <div class="status-icon ${sfClass}" title="Soubory">
-          <svg viewBox="0 0 15 15" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h7a1 1 0 001-1V5L8.5 1.5z"/><path d="M8.5 1.5V5H12"/></svg>
-        </div>
+        ${kalPrice ? '<div style="font-size:13px;font-weight:600;color:var(--gold);">' + kalPrice + '</div>' : ''}
       </div>
       <div class="klient-card-copy">
         ${k.slug ? '<span class="klient-slug-badge">/' + k.slug + '</span>' : '<span class="klient-slug-badge" style="color:var(--ink3);">bez slug</span>'}
@@ -1111,7 +1120,7 @@ function kkUpdateRetainer() {
   if (el) el.textContent = rate.toLocaleString('cs-CZ') + ' Kč / hod';
   kkScheduleSave();
 }
-function kkRateMax() { return parseInt(document.getElementById('kk-rate-max')?.value) || 2000; }
+function kkRateMax() { return kkRateMin(); }
 
 function kkRenderCatalog(kalData) {
   const container = document.getElementById('kk-cats');
@@ -1175,9 +1184,9 @@ function kkRenderCatalog(kalData) {
 
     catDiv.innerHTML = `<div class="kalk-cat-label"><span class="kalk-cat-title">${cat.cat}</span><div class="kalk-cat-line"></div></div>
       <div class="kalk-items">${itemsHtml}</div>
-      <div class="kk-cat-total" style="margin-top:6px;padding:10px 14px;background:var(--surface3);border-radius:7px;display:none;justify-content:space-between;align-items:center;">
-        <span style="font-family:var(--mono);font-size:10px;color:var(--ink3);">${cat.cat}</span>
-        <span style="font-family:var(--mono);font-size:12px;color:var(--gold);font-weight:500;" class="kk-cat-price" style="font-size:15px;"></span>
+      <div class="kk-cat-total" style="margin-top:6px;padding:14px 18px;background:var(--surface3);border:1px solid var(--gold-border);border-radius:10px;display:none;justify-content:space-between;align-items:center;gap:12px;">
+        <span style="font-size:15px;font-weight:500;color:var(--ink2);">${cat.cat}</span>
+        <span style="font-size:16px;font-weight:600;color:var(--gold);white-space:nowrap;" class="kk-cat-price"></span>
       </div>`;
     container.appendChild(catDiv);
   });
@@ -1264,9 +1273,7 @@ async function loadKalkulace() {
   if (isAdmin && kalData._rateMax) document.getElementById('kk-rate-max').value = kalData._rateMax;
   const retainerAdminWrap = document.getElementById('kk-retainer-admin-wrap');
   if (retainerAdminWrap) retainerAdminWrap.style.display = isAdmin ? 'block' : 'none';
-  const retainerRate = kalData._retainerRate || 1500;
-  const retainerInput = document.getElementById('kk-retainer-rate');
-  if (retainerInput) retainerInput.value = retainerRate;
+  if (isAdmin && kalData._rateMin) { document.getElementById('kk-rate-min').value = kalData._rateMin; document.getElementById('kk-rate-max').value = kalData._rateMin; }
   kkUpdateRetainer();
 
   const title = document.getElementById('kk-title');
@@ -1290,8 +1297,7 @@ function kkScheduleSave() {
 async function kkDoSave(manual) {
   if (!currentSchuzkaId) return;
   const rate = kkRateMin();
-  const retainerRate = parseInt(document.getElementById('kk-retainer-rate')?.value) || 1500;
-  const kalkulace = { _rateMin: rate, _rateMax: rate, _retainerRate: retainerRate };
+  const kalkulace = { _rateMin: rate, _rateMax: rate, _retainerRate: rate };
   document.querySelectorAll('#kk-cats .kalk-item').forEach(item => {
     const visibleCb = item.querySelector('input[type="checkbox"]');
     kalkulace[item.dataset.id] = {
