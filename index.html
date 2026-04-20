@@ -1290,12 +1290,10 @@ async function loadKalkulace() {
   const adminSazba = document.getElementById('kk-admin-sazba');
   if (adminSazba) adminSazba.style.display = isAdmin ? 'block' : 'none';
 
-  if (isAdmin && kalData._rateMin) document.getElementById('kk-rate-min').value = kalData._rateMin;
-  if (isAdmin && kalData._rateMax) document.getElementById('kk-rate-max').value = kalData._rateMax;
-  const retainerAdminWrap = document.getElementById('kk-retainer-admin-wrap');
-  if (retainerAdminWrap) retainerAdminWrap.style.display = isAdmin ? 'block' : 'none';
-  if (isAdmin && kalData._rateMin) { document.getElementById('kk-rate-min').value = kalData._rateMin; document.getElementById('kk-rate-max').value = kalData._rateMin; }
-  kkUpdateRetainer();
+  if (kalData._rateMin) {
+    document.getElementById('kk-rate-min').value = kalData._rateMin;
+    document.getElementById('kk-rate-max').value = kalData._rateMin;
+  }
 
   const title = document.getElementById('kk-title');
   if (title) title.textContent = isAdmin ? 'Nastavte ceník pro klienta' : 'Zaškrtněte co potřebujete';
