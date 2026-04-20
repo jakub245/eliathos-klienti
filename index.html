@@ -316,8 +316,8 @@ body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink)
       <div class="login-brand-tag">LET THEM GROW</div>
     </div>
     <div class="login-card">
-      <h2 id="login-title">Vítejte</h2>
-      <p id="login-desc">Zadejte heslo pro přístup k portálu.</p>
+      <h2 id="login-title">Přihlášení</h2>
+      <p id="login-desc">Zadejte administrátorské heslo.</p>
       <div class="form-field">
         <label class="form-label">Heslo</label>
         <input class="form-input" type="password" id="login-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
@@ -770,18 +770,19 @@ async function checkSession() {
   if (sessionStorage.getItem('eli_admin')) {
     isAdmin = true; loadAdminDashboard(); return;
   }
+  const slug = getSlug();
+  if (slug) {
+    const { data } = await sb.from('klienti').select('*').eq('slug', slug).eq('aktivni', true).single();
+    if (data) {
+      currentKlient = data;
+      sessionStorage.setItem('eli_klient', data.id);
+      loadPortal(false); return;
+    }
+  }
   const kid = sessionStorage.getItem('eli_klient');
   if (kid) {
     const { data } = await sb.from('klienti').select('*').eq('id', kid).single();
     if (data) { currentKlient = data; loadPortal(false); return; }
-  }
-  const slug = getSlug();
-  if (slug) {
-    const { data } = await sb.from('klienti').select('jmeno').eq('slug', slug).single();
-    if (data) {
-      document.getElementById('login-title').textContent = 'Vítejte, ' + data.jmeno;
-      document.title = 'Eliathos · ' + data.jmeno;
-    }
   }
   showView('login');
 }
@@ -822,7 +823,7 @@ async function loadAdminDashboard() {
 
     const card = document.createElement('div');
     card.className = 'klient-card';
-    const portalUrl = k.slug ? (window.location.origin + window.location.pathname + '?k=' + k.slug) : null;
+    const portalUrl = k.slug ? ('https://klient.eliathos.cz/?k=' + k.slug) : null;
     const inviteText = portalUrl
       ? 'Dobrý den,\n\npřipravil jsem pro vás klientský portál Eliathos.\n\nOdkaz: ' + portalUrl + '\nHeslo: ' + (k.heslo || '—') + '\n\nTěším se na spolupráci!'
       : null;
